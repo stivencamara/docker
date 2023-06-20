@@ -1,0 +1,1 @@
+[card-login]{height:auto;min-width:484px}@media (max-width: 575.98px){[card-login]{min-width:auto}}.login-backoffice{display:none}.login-backoffice.show{display:block;animation-name:fade;animation-duration:.5s}@keyframes fade{0%{opacity:0;height:150px}to{opacity:1;height:328px}}

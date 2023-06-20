@@ -16,6 +16,7 @@
 #     $ docker-compose up -d kafka1 kafka2 kafka3
 
 version: '3.3'
+container: ces-dev
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:${CONFLUENT_PLATFORM_VERSION:-3.0.0}
@@ -35,6 +36,7 @@ services:
     - ZOOKEEPER_INIT_LIMIT=5
     - ZOOKEEPER_SYNC_LIMIT=2
     - ZOOKEEPER_SERVERS=zookeeper:2888:3888
+    restart: always
   kafka1:
     image: confluentinc/cp-kafka:${CONFLUENT_PLATFORM_VERSION:-3.0.0}
     healthcheck:
@@ -51,6 +53,7 @@ services:
     - BOOTSTRAP_SERVERS=kafka1:9091,kafka2:9092
     #,kafka3:9093,kafka4:9094,kafka5:9095
     - ZOOKEEPER=zookeeper:2181
+    restart: always
   kafka2:
     image: confluentinc/cp-kafka:${CONFLUENT_PLATFORM_VERSION:-3.0.0}
     healthcheck:
@@ -67,6 +70,7 @@ services:
     - BOOTSTRAP_SERVERS=kafka1:9091,kafka2:9092
     #,kafka3:9093,kafka4:9094,kafka5:9095
     - ZOOKEEPER=zookeeper:2181
+    restart: always
   # kafka3:
     # image: confluentinc/cp-kafka:${CONFLUENT_PLATFORM_VERSION:-3.0.0}
     # healthcheck:

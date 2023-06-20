@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+
+  # Master
+  redis-m:
+    container_name: redis-m
+    command: redis-server --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes
+    image: redis:alpine
+    ports:
+      - 16379:16379
+    volumes:
+      - redis-data:/data/redis-m
+    restart: always
+    networks:
+      - docker-network
+    deploy:
+      replicas: 1
+
+  #Replica 1
+  redis-r1:
+    container_name: redis-r1
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    command: redis-server --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes --cluster-announce-ip redis-master --cluster-announce-port 6379 --cluster-announce-bus-port 16379
+    networks:
+      - docker-network
+    deploy:
+      replicas: 1
+    volumes:
+      - redis-data:/data/redis-r1
+
+volumes:
+  redis-data:
+
+networks:
+  docker-network:
+    driver: bridge
+
+    # deploy:    
+      # replicas: 6
+      # placement:
+      #   max_replicas_per_node: 1
+      # update_config:
+      #   parallelism: 2
+      #   delay: 10s
+      # restart_policy:
+      #   condition: on-failure
