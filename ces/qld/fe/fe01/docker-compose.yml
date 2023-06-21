@@ -1,0 +1,16 @@
+version: '3.9'
+services:
+  fe01:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5001:5001
+#      - 443:443
+    volumes:
+      - content:/usr/share/nginx/html
+    restart: always
+
+networks:
+  qld-ces-network:
+    driver: bridge

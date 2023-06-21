@@ -1,0 +1,1 @@
+import{v as t}from"./index-920dbb37.js";const n={search:e=>t.post("/settings/lifeevent/search",e),create:e=>t.post("/settings/lifeevent",e),update:e=>t.put("/settings/lifeevent",e),delete:e=>t.delete(`/settings/lifeevent/${e}`),getById:e=>t.get(`/settings/lifeevent/${e}`)};export{n as l};

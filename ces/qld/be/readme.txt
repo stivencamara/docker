@@ -1,0 +1,1 @@
+openssl x509 -req -in csr.pem -CA ca-certificate.pem -CAkey ca-private-key.pem -CAcreateserial -out certificate.pem -days 3650 -extfile certificate-qld-api.conf

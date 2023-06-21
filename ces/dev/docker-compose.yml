@@ -1,118 +1,71 @@
-# WARNING: This docker-compose.yml is only for testing purpose.
-# Parameters:
-# - name: CONFLUENT_PLATFORM_VERSION
-#   default: 3.0.0
-#   reference: https://hub.docker.com/u/confluentinc/
-# Ports:
-# - description: Major ports are exposed to host computer
-# - zookeeper: 2181
-#      kafka1: 9091
-#      kafka2: 9092
-#      kafka3: 9093
-#      kafka4: 9094
-#      kafka5: 9095
-# Tips:>
-#   - You can up part of the cluster with below command.
-#     $ docker-compose up -d kafka1 kafka2 kafka3
-
-version: '3.3'
-container: ces-dev
+version: "3.9"
 services:
+  redis:
+    restart: always
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    networks:
+      - dev-ces-network
+
   zookeeper:
-    image: confluentinc/cp-zookeeper:${CONFLUENT_PLATFORM_VERSION:-3.0.0}
-    ports:
-    - "2181:2181"
-    - "2888:2888"
-    - "3888:3888"
-    healthcheck:
-      test: echo stat | nc localhost 2181
-      interval: 10s
-      timeout: 10s
-      retries: 3
-    environment:
-    - ZOOKEEPER_SERVER_ID=1
-    - ZOOKEEPER_CLIENT_PORT=2181
-    - ZOOKEEPER_TICK_TIME=2000
-    - ZOOKEEPER_INIT_LIMIT=5
-    - ZOOKEEPER_SYNC_LIMIT=2
-    - ZOOKEEPER_SERVERS=zookeeper:2888:3888
     restart: always
-  kafka1:
-    image: confluentinc/cp-kafka:${CONFLUENT_PLATFORM_VERSION:-3.0.0}
-    healthcheck:
-      test: ps augwwx | egrep [S]upportedKafka
+    image: 'bitnami/zookeeper:3.8.1'
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - dev-ces-network
+
+  kafka:
+    restart: always
+    image: 'bitnami/kafka:3.2.3'
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT
+      - KAFKA_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    networks:
+      - dev-ces-network
     depends_on:
-    - zookeeper
-    ports:
-    - "9091:9091"
-    environment:
-    - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka1:9091
-    - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9091
-    - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-    - KAFKA_BROKER_ID=1
-    - BOOTSTRAP_SERVERS=kafka1:9091,kafka2:9092
-    #,kafka3:9093,kafka4:9094,kafka5:9095
-    - ZOOKEEPER=zookeeper:2181
+      - zookeeper
+  
+  sqlserver:
     restart: always
-  kafka2:
-    image: confluentinc/cp-kafka:${CONFLUENT_PLATFORM_VERSION:-3.0.0}
-    healthcheck:
-      test: ps augwwx | egrep [S]upportedKafka
-    depends_on:
-    - zookeeper
-    ports:
-    - "9092:9092"
+    image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
-    - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka2:9092
-    - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092
-    - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-    - KAFKA_BROKER_ID=2
-    - BOOTSTRAP_SERVERS=kafka1:9091,kafka2:9092
-    #,kafka3:9093,kafka4:9094,kafka5:9095
-    - ZOOKEEPER=zookeeper:2181
-    restart: always
-  # kafka3:
-    # image: confluentinc/cp-kafka:${CONFLUENT_PLATFORM_VERSION:-3.0.0}
-    # healthcheck:
-      # test: ps augwwx | egrep [S]upportedKafka
-    # depends_on:
-    # - zookeeper
-    # ports:
-    # - "9093:9093"
-    # environment:
-    # - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka3:9093
-    # - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9093
-    # - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-    # - KAFKA_BROKER_ID=3
-    # - BOOTSTRAP_SERVERS=kafka1:9091,kafka2:9092,kafka3:9093,kafka4:9094,kafka5:9095
-    # - ZOOKEEPER=zookeeper:2181
-  # kafka4:
-    # image: confluentinc/cp-kafka:${CONFLUENT_PLATFORM_VERSION:-3.0.0}
-    # healthcheck:
-      # test: ps augwwx | egrep [S]upportedKafka
-    # depends_on:
-    # - zookeeper
-    # ports:
-    # - "9094:9094"
-    # environment:
-    # - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka4:9094
-    # - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9094
-    # - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-    # - KAFKA_BROKER_ID=4
-    # - BOOTSTRAP_SERVERS=kafka1:9091,kafka2:9092,kafka3:9093,kafka4:9094,kafka5:9095
-    # - ZOOKEEPER=zookeeper:2181
-  # kafka5:
-    # image: confluentinc/cp-kafka:${CONFLUENT_PLATFORM_VERSION:-3.0.0}
-    # healthcheck:
-      # test: ps augwwx | egrep [S]upportedKafka
-    # depends_on:
-    # - zookeeper
-    # ports:
-    # - "9095:9095"
-    # environment:
-    # - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka5:9095
-    # - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9095
-    # - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-    # - KAFKA_BROKER_ID=5
-    # - BOOTSTRAP_SERVERS=kafka1:9091,kafka2:9092,kafka3:9093,kafka4:9094,kafka5:9095
-    # - ZOOKEEPER=zookeeper:2181
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=P@ssw0rd
+      - MSSQL_DATA_DIR=/var/opt/sqlserver/data
+      - MSSQL_LOG_DIR=/var/opt/sqlserver/log
+      - MSSQL_BACKUP_DIR=/var/opt/sqlserver/backup
+      - MSSQL_TCP_PORT=1433
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlsystem_data:/var/opt/mssql/
+      - sqldata_data:/var/opt/sqlserver/data
+      - sqllog_data:/var/opt/sqlserver/log
+      - sqlbackup_data:/var/opt/sqlserver/backup
+    networks:
+      - dev-ces-network
+    deploy:
+        resources:
+            limits:
+                memory: 2048M
+
+volumes:
+  zookeeper_data:
+  kafka_data:
+  sqlserver_data:
+  sqlsystem_data:
+  sqldata_data:
+  sqllog_data:
+  sqlbackup_data:
+
+networks:
+  dev-ces-network:
+    driver: bridge

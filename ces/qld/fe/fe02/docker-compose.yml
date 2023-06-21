@@ -1,0 +1,15 @@
+version: '3.9'
+services:
+  fe02:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5002:5002
+#      - 443:443
+    volumes:
+      - content:/usr/share/nginx/html
+    restart: always
+
+networks:
+  qld-ces-network:
