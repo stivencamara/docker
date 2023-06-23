@@ -22,3 +22,9 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-
 sudo apt-get install wget
 
 wget URL
+
+
+# Portainer CE
+
+https://docs.portainer.io/start/install-ce/server/docker/wsl
+https://pimylifeup.com/raspberry-pi-portainer/

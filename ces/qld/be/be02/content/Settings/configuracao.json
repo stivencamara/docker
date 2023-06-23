@@ -1,5 +1,0 @@
-{
-  "KafkaProducerSettings": {
-    "BootstrapServers": "kafka1:9091,kafka2:9092"
-  }
-}
