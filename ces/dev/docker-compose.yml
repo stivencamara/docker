@@ -1,5 +1,6 @@
 version: "3.9"
 services:
+
   redis:
     restart: always
     image: redis:alpine
@@ -7,7 +8,7 @@ services:
       - 6379:6379
     networks:
       ces_network:
-        #ipv4_address: 192.168.1.120
+        ipv4_address: 192.168.1.120
 
   zookeeper:
     image: bitnami/zookeeper:3.8.1
@@ -25,7 +26,7 @@ services:
       - 22181:2181
     networks:
       ces_network:
-        #ipv4_address: 192.168.1.120
+        ipv4_address: 192.168.1.121
 
   kafka1:
     restart: always
@@ -42,7 +43,7 @@ services:
       test: ps augwwx | egrep [S]upportedKafka
     networks:
       ces_network:
-        #ipv4_address: 192.168.1.122
+        ipv4_address: 192.168.1.122
     depends_on:
       - zookeeper
     volumes:
@@ -63,7 +64,7 @@ services:
       test: ps augwwx | egrep [S]upportedKafka
     networks:
       ces_network:
-        #ipv4_address: 192.168.1.122
+        ipv4_address: 192.168.1.123
     depends_on:
       - zookeeper
     volumes:
@@ -75,10 +76,6 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=P@ssw0rd
-      # - MSSQL_DATA_DIR=/var/opt/sqlserver/data
-      # - MSSQL_LOG_DIR=/var/opt/sqlserver/log
-      # - MSSQL_BACKUP_DIR=/var/opt/sqlserver/backup
-      # - MSSQL_TCP_PORT=1433
     ports:
       - "1433:1433"
     volumes:
@@ -88,11 +85,56 @@ services:
       - sqlbackup_data:/var/opt/sqlserver/backup
     networks:
       ces_network:
-        #ipv4_address: 192.168.1.123
+        ipv4_address: 192.168.1.124
     deploy:
         resources:
             limits:
                 memory: 2048M
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_STACK_VERSION}
+    networks:
+      ces_network:
+        ipv4_address: 192.168.1.125
+    environment:
+      discovery.type: single-node
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      xpack.license.self_generated.type: basic
+      bootstrap.memory_lock: true
+      xpack.security.enabled: false
+      xpack.security.http.ssl.enabled: false
+      xpack.security.transport.ssl.enabled: false
+      #ES_JAVA_OPTS: "-Xms2g -Xmx2g"
+      #xpack.monitoring.enabled: "true"
+    ports:
+      - 9200:9200
+      - 9300:9300
+    mem_limit: ${MEM_LIMIT}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:${KIBANA_STACK_VERSION}
+    networks:
+      ces_network:
+        ipv4_address: 192.168.1.126
+    depends_on:
+      - elasticsearch
+    #     condition: service_healthy
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+      SERVERNAME: kibana
+      ELASTICSEARCH_USERNAME: kibana_system
+      ELASTICSEARCH_PASSWORD: ${KIBANA_PASSWORD}
+    mem_limit: ${MEM_LIMIT}
+    volumes:
+      - kibana_data:/usr/share/kibana/data
 
 volumes:
   zookeeper_data:
@@ -102,9 +144,17 @@ volumes:
   sqldata_data:
   sqllog_data:
   sqlbackup_data:
+  es_data:
+  kibana_data:
 
 networks:
   ces_network:
     # external: true
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.1.0/24
+          gateway: 192.168.1.1
 
       
