@@ -1,0 +1,37 @@
+version: '3.9'
+ 
+services:
+    #SQL SERVER 2019
+    sql_server_2019_clean:
+        restart: always
+        container_name: sql_server_2019_clean
+        build: 
+          context: .
+          dockerfile: sqlserver.sh
+        ports:  
+          - "1434:1433"
+        env_file:
+          - sqlserver.env
+        volumes: 
+          - sqlsystem:/var/opt/mssql/
+          - sqldata:/var/opt/sqlserver/data
+          - sqllog:/var/opt/sqlserver/log
+          - sqlbackup:/var/opt/sqlserver/backup
+          #- ../Certificados:/SqlServer2019/Certificados #para ter os certificados no container
+        networks:
+            sql-network:
+                ipv4_address: 192.169.1.40
+        deploy:
+            resources:
+                limits:
+                    memory: 2048M
+volumes:
+  sqlsystem:
+  sqldata:
+  sqllog:
+  sqlbackup:
+
+networks:
+  sql-network:
+    external:
+      name: qld_ces_network

@@ -146,6 +146,7 @@ volumes:
   sqlbackup_data:
   es_data:
   kibana_data:
+  kong_data:
 
 networks:
   ces_network:

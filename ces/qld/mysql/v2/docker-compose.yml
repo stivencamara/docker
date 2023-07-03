@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  mysql-management:
+    image: container-registry.oracle.com/mysql/community-cluster:ndb_mgmd
+    networks:
+        qld_ces_network:
+            ipv4_address: 192.169.1.50
+
+  mysql-node1:
+    image: container-registry.oracle.com/mysql/community-cluster:ndbd
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: true
+    networks:
+        qld_ces_network:
+            ipv4_address: 192.169.1.51
+
+  mysql-node2:
+    image: container-registry.oracle.com/mysql/community-cluster:ndbd
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: true
+    networks:
+        qld_ces_network:
+            ipv4_address: 192.169.1.52
+
+networks:
+  qld_ces_network:
+    external: true
