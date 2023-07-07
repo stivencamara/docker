@@ -1,10 +1,9 @@
 version: "3.9"
 networks:
-  qld_ces_network:
-    # external: true
-    driver: bridge
+  mysql:
+    driver: overlay
     ipam:
       driver: default
       config:
         - subnet: 192.168.1.0/24
-          gateway: 192.168.1.1
+        - gateway: 192.168.1.1
