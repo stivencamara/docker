@@ -1,27 +1,29 @@
 version: "3.9"
 services:
-  mysql-management:
-    image: container-registry.oracle.com/mysql/community-cluster:ndb_mgmd
+  mysql-master:
+    image: mysql/mysql-server:8.0
+    environment:
+      MYSQL_RANDOM_PASSWORD: P@ssw0rd
     networks:
-        qld_ces_network:
-            ipv4_address: 192.169.1.50
+        cluster:
+            ipv4_address: 192.169.1.102
 
   mysql-node1:
-    image: container-registry.oracle.com/mysql/community-cluster:ndbd
+    image: mysql/mysql-server:8.0
     environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: true
+      MYSQL_RANDOM_PASSWORD: P@ssw0rd
     networks:
-        qld_ces_network:
-            ipv4_address: 192.169.1.51
+        cluster:
+            ipv4_address: 192.169.1.104
 
   mysql-node2:
-    image: container-registry.oracle.com/mysql/community-cluster:ndbd
+    image: mysql/mysql-server:8.0
     environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: true
+      MYSQL_RANDOM_PASSWORD: P@ssw0rd
     networks:
-        qld_ces_network:
-            ipv4_address: 192.169.1.52
+        cluster:
+            ipv4_address: 192.169.1.105
 
 networks:
-  qld_ces_network:
-    external: true
+  cluster:
+    driver: bridge

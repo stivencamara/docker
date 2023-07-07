@@ -16,9 +16,6 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: yes
     ports:
       - 3306:3306
-    networks:
-        db-network:
-            ipv4_address: 192.169.1.40
     volumes:
       - mysql_data:/var/lib/mysql
 
@@ -31,8 +28,4 @@ services:
 volumes:
   mysql_data:
 
-networks:
-  db-network:
-    external:
-      name: qld_ces_network
   
