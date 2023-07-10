@@ -67,3 +67,5 @@ volumes:
 
 networks:
   kafka:
+    external: true
+      
