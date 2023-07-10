@@ -16,6 +16,8 @@ services:
       retries: 3
     ports:
       - 2181:2181
+    networks:
+      - kafka
 
   kafka1:
     restart: always
@@ -34,6 +36,8 @@ services:
       - zookeeper1
     volumes:
       - kafka_data:/var/lib/kafka/data
+    networks:
+      - kafka
       
   kafka2:
     restart: always
@@ -52,6 +56,8 @@ services:
       - zookeeper1
     volumes:
       - kafka_data:/var/lib/kafka/data
+    networks:
+      - kafka
       
   zoonavigator:
     container_name: zoonavigator
@@ -62,3 +68,6 @@ services:
 volumes:
   zookeeper_data:
   kafka_data:
+
+networks:
+  kafka:
