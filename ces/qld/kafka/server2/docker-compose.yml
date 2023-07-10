@@ -1,4 +1,5 @@
 version: "3.9"
+name: "ces"
 services:
   zookeeper1:
     image: bitnami/zookeeper:3.8.1
