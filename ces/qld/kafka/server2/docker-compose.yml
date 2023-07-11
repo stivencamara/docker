@@ -1,38 +1,61 @@
 version: '3'
+name: 'kafka-node'
 services:
   zookeeper2:
+    restart: al
+    container_name: zookeeper2
     image: confluentinc/cp-zookeeper:7.4.0
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - 32181:2181
+      - 2181:2181
+    networks:
+      - kafka
 
-  kafka1:
+  kafka3:
+    container_name: kafka3
     image: confluentinc/cp-kafka:7.4.0
     depends_on:
       - zookeeper2
-
     ports:
-      - 49092:49092
+      - 39092:39092
     environment:
       KAFKA_BROKER_ID: 3
       KAFKA_ZOOKEEPER_CONNECT: zookeeper2:2181,zookeeper1:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka3:9092,PLAINTEXT_HOST://localhost:49092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka3:9092,PLAINTEXT_HOST://kafka3:39092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - kafka
+    volumes:
+      - kafka3_data:/var/lib/kafka/data
 
-  kafka2:
+  kafka4:
+    container_name: kafka4
     image: confluentinc/cp-kafka:7.4.0
     depends_on:
       - zookeeper2
     ports:
-      - 59092:59092
+      - 49092:49092
     environment:
       KAFKA_BROKER_ID: 4
       KAFKA_ZOOKEEPER_CONNECT: zookeeper2:2181,zookeeper1:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka4:9092,PLAINTEXT_HOST://localhost:59092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka4:9092,PLAINTEXT_HOST://kafka4:49092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - kafka
+    volumes:
+      - kafka4_data:/var/lib/kafka/data
+
+volumes:
+  kafka3_data:
+  kafka4_data:
+
+networks:
+  kafka:
+    external: true
+    driver: overlay
