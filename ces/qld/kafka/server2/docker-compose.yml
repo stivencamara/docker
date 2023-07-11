@@ -2,7 +2,6 @@ version: '3'
 name: 'kafka'
 services:
   zookeeper2:
-    restart: al
     container_name: zookeeper2
     image: confluentinc/cp-zookeeper:7.4.0
     environment:
