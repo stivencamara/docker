@@ -1,72 +1,38 @@
-version: "3.9"
+version: '3'
 services:
   zookeeper1:
-    image: bitnami/zookeeper:3.8.1
-    container_name: zookeeper1
+    image: confluentinc/cp-zookeeper:7.4.0
     environment:
-      ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-      ZOOKEEPER_INIT_LIMIT: 5
-      ZOOKEEPER_SYNC_LIMIT: 2
-      ALLOW_ANONYMOUS_LOGIN: yes
-    healthcheck:
-      test: echo stat | nc localhost 2181
-      interval: 10s
-      timeout: 10s
-      retries: 3
     ports:
-      - 2181:2181
-    networks:
-      - kafka
+      - 22181:2181
 
   kafka1:
-    restart: always
-    image: bitnami/kafka:3.2.3
-    container_name: kafka1
-    environment:
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:9091
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181;zookeeper2:2181
-      BOOTSTRAP_SERVERS: kafka1:9091,kafka2:9092
-      ZOOKEEPER: zookeeper1:2181
-      ALLOW_PLAINTEXT_LISTENER: yes
-    ports:
-      - "9091:9091"
-    healthcheck:
-      test: ps augwwx | egrep [S]upportedKafka
+    image: confluentinc/cp-kafka:7.4.0
     depends_on:
       - zookeeper1
-    volumes:
-      - kafka_data:/var/lib/kafka/data
-    networks:
-      - kafka
-      
-  kafka2:
-    restart: always
-    image: bitnami/kafka:3.2.3
-    container_name: kafka2
-    environment:
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:9092
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181;zookeeper2:2181
-      BOOTSTRAP_SERVERS: kafka1:9091,kafka2:9092
-      ZOOKEEPER: zookeeper1:2181
-      ALLOW_PLAINTEXT_LISTENER: yes
-    ports:
-      - "9092:9092"
-    healthcheck:
-      test: ps augwwx | egrep [S]upportedKafka
-    depends_on:
-      - zookeeper1
-    volumes:
-      - kafka_data:/var/lib/kafka/data
-    networks:
-      - kafka
-      
-volumes:
-  kafka_data:
 
-networks:
-  kafka:
-    external: true
-    driver: overlay
-      
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181;zookeeper2:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  kafka2:
+    image: confluentinc/cp-kafka:7.4.0
+    depends_on:
+      - zookeeper1
+    ports:
+      - 39092:39092
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181;zookeeper2:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:9092,PLAINTEXT_HOST://localhost:39092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
