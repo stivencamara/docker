@@ -1,5 +1,5 @@
 version: '3'
-name: 'kafka-master'
+name: 'kafka'
 services:
 
   zookeeper1:
