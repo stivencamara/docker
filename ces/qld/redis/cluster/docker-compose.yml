@@ -1,0 +1,18 @@
+version: '3.5'
+name: redis
+services:
+
+  redis-cluster:
+      image: 'redis:6.0-alpine'
+      command: redis-cli --cluster create 172.22.0.2:6373 172.22.0.3:6374 --cluster-replicas 1 --cluster-yes
+      networks:
+        redis:
+          ipv4_address: 172.20.0.1
+      depends_on:
+        - redis-node-1
+        - redis-node-2
+
+networks:
+  redis:
+    external: true
+    driver: overlay

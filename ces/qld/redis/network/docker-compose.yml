@@ -1,0 +1,9 @@
+version: "3.9"
+networks:
+  redis:
+    driver: overlay
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.22.1.0/24
+        - gateway: 172.22.1.1
