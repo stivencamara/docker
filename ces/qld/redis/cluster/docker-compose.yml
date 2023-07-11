@@ -9,8 +9,8 @@ services:
         redis:
           ipv4_address: 172.20.0.1
       depends_on:
-        - redis-node-1
-        - redis-node-2
+        - redis1
+        - redis2
 
 networks:
   redis:
