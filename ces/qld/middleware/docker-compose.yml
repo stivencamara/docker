@@ -1,7 +1,8 @@
 version: '3.7'
-
+name: kong
 services:
   kong-migrations:
+    container_name: kong-migrations
     image: "kong:2.3.2-alpine"
     command: kong migrations bootstrap
     depends_on:
@@ -20,6 +21,7 @@ services:
         condition: on-failure
 
   kong-migrations-up:
+    container_name: kong-migrations-up
     image: "kong:2.3.2-alpine"
     command: kong migrations up && kong migrations finish
     depends_on:
@@ -38,6 +40,7 @@ services:
         condition: on-failure
 
   kong:
+    container_name: kong
     image: "kong:2.3.2-alpine"
     user: "kong"
     depends_on:
@@ -72,12 +75,12 @@ services:
         condition: on-failure
     
   postgres:
+    container_name: postgres
     image: postgres:9.5
     environment:
       POSTGRES_DB: kong
       POSTGRES_USER: kong
-      POSTGRES_PASSWORD: kong
-    
+      POSTGRES_PASSWORD: kong    
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "kong"]
       interval: 30s
@@ -97,7 +100,7 @@ services:
   konga-prepare:
     container_name: konga-prepare
     image: pantsel/konga:latest
-    command: "-c prepare -a postgres -u postgresql://kong:kong@db:5432/konga_db"
+    command: "-c prepare -a postgres -u postgresql://kong:kong@postgres:5432/konga_db"
     networks:
       - kong
     restart: on-failure
@@ -115,13 +118,13 @@ services:
       DB_HOST: postgres
       DB_USER: kong
       DB_PASSWORD: kong
-      TOKEN_SECRET: ahfdjgjgf79JKLFHJKh978953kgdfjkl
+      TOKEN_SECRET: fa53edca76e64896860f6e6a35a6375a
       DB_DATABASE: konga_db
       NODE_ENV: production
     depends_on:
       - postgres
     ports:
-      - "1337:1337"
+      - 1337:1337
 
 volumes:
   postgres_data:
