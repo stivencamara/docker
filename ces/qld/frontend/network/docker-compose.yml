@@ -1,0 +1,9 @@
+version: "3.9"
+networks:
+  frontend:
+    driver: overlay
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.23.1.0/16
+        - gateway: 172.23.1.1
