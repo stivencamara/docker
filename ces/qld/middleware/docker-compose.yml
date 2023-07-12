@@ -128,7 +128,7 @@ services:
       - "1337:1337"
 
 volumes:
-  postgress_data:
+  postgres_data:
 
 networks:
   kong:
