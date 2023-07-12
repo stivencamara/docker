@@ -48,7 +48,7 @@ services:
     environment:
       KONG_ADMIN_ACCESS_LOG: /dev/stdout
       KONG_ADMIN_ERROR_LOG: /dev/stderr
-      KONG_ADMIN_LISTEN: '0.0.0.0:8001'
+      KONG_ADMIN_LISTEN: 'kong:8001'
       KONG_CASSANDRA_CONTACT_POINTS: db
       KONG_DATABASE: postgres
       KONG_PG_DATABASE: kong
@@ -132,5 +132,5 @@ volumes:
 
 networks:
   kong:
-    external: true
-    driver: overlay
+    # external: true
+    # driver: overlay
