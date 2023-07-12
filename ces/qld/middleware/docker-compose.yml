@@ -132,5 +132,5 @@ volumes:
 
 networks:
   kong:
-    # external: true
-    # driver: overlay
+    external: true
+    driver: overlay
