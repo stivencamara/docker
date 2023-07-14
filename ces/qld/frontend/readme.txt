@@ -6,11 +6,11 @@ Copiar os ficheiros do frontend já compilado com a URL da api já correta para 
 
 Criar a imagem do frontend:
 
-docker build -t dev:ces_app .
+docker build -t cesazores/ces:qld_app_{VERSION} .
 
 # DOCKER CONTAINER
 
-docker run -d -p 5000:5000 -p 443:443 --name qld-ces.azores.gov.pt dev:ces_app
+docker run -d -p 5000:5000 -p 443:443 --name qld-ces.azores.gov.pt cesazores/ces:qld_app_{VERSION}
 
 # HTTPS
 
@@ -26,15 +26,18 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx.key -out nginx
 
 
 # DOCKER HUB
-docker tag dev:ces_app stivencamara/dev:ces_app
 
-docker push stivencamara/dev:ces_app 
+docker login -u cesazoers --password-stdin g58HKnNiQpf0 
+
+docker tag cesazores/ces:qld_app_{VERSION} cesazores/ces:qld_app_{VERSION}
+
+docker push cesazores/ces:qld_app_{VERSION}
 
 
 # DOCKER PULL IMAGE
-sudo docker image pull stivencamara/dev:ces_app
+sudo docker image pull cesazores/ces:qld_app_{VERSION}
 
-sudo docker run -d --restart always -p 5000:5000 -p 443:443 --name qld-ces.azores.pt stivencamara/dev:ces_app
+sudo docker run -d --restart always -p 5000:5000 -p 443:443 --name qld-ces.azores.pt cesazores/ces:qld_app_{VERSION}
 
 # BROWSER
 
