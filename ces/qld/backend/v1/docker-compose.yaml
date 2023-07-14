@@ -10,6 +10,8 @@ services:
     restart: always
     networks:
       backend:
+    deploy:
+      replicas: 2
 
 networks:
   backend:
