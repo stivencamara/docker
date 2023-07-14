@@ -1,4 +1,5 @@
 version: '3.9'
+name: api
 services:
   api:
     image: cesazores/ces:qld_api_1
