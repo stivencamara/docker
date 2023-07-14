@@ -9,9 +9,9 @@ services:
       - 443:443
     restart: always
     networks:
-      backend:
+      qld_ces_network:
 
 networks:
-  backend:
-    driver: overlay
-    external: true
+  qld_ces_network:
+    driver: bridge
+    #external: true
