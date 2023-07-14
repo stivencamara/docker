@@ -1,7 +1,8 @@
 version: '3.9'
-name: api
+name: backend
 services:
   api:
+    container_name: api
     image: cesazores/ces:qld_api_1
     ports:
       - 5002:5002
