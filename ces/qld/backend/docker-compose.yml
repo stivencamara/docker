@@ -1,0 +1,15 @@
+version: '3.9'
+services:
+  api:
+    image: cesazores/ces:qld_api_1
+    ports:
+      - 5002:5002
+      - 443:443
+    restart: always
+    networks:
+      backend:
+
+networks:
+  backend:
+    driver: overlay
+    external: true
