@@ -27,7 +27,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx.key -out nginx
 
 # DOCKER HUB
 
-docker login -u cesazoers --password-stdin g58HKnNiQpf0 
+docker login -u cesazores
 
 docker tag cesazores/ces:qld_app_{VERSION} cesazores/ces:qld_app_{VERSION}
 

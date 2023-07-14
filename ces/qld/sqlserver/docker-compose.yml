@@ -1,0 +1,34 @@
+version: "3.3"
+services:
+  sqlserver:
+    restart: always
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=P@ssw0rd
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlsystem_data:/var/opt/mssql/
+      - sqldata_data:/var/opt/sqlserver/data
+      - sqllog_data:/var/opt/sqlserver/log
+      - sqlbackup_data:/var/opt/sqlserver/backup
+    networks:
+      sqlserver:
+        ipv4_address: 172.26.1.2
+    deploy:
+        resources:
+            limits:
+                memory: 2048M
+
+volumes:
+  sqlserver_data:
+  sqlsystem_data:
+  sqldata_data:
+  sqllog_data:
+  sqlbackup_data:
+
+networks:
+  sqlserver:
+    external: true
+    driver: overlay
