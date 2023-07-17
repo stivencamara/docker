@@ -4,8 +4,8 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_STACK_VERSION}
     networks:
-      ces_network:
-        ipv4_address: 192.168.1.125
+      elasticsearch:
+        ipv4_address: 172.25.1.2
     environment:
       discovery.type: single-node
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
@@ -30,8 +30,8 @@ services:
   kibana:
     image: docker.elastic.co/kibana/kibana:${KIBANA_STACK_VERSION}
     networks:
-      ces_network:
-        ipv4_address: 192.168.1.126
+      elasticsearch:
+        ipv4_address: 172.25.1.3
     depends_on:
       - elasticsearch
     #     condition: service_healthy
