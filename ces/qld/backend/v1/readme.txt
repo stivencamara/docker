@@ -4,7 +4,7 @@ docker build -t cesazores/ces:qld_api_{VERSION} .
 
 docker build -t cesazores/ces:qld_api_1 .
 
-docker run -d -p 5002:5002 -p 443:443 --name qld-api-ces.azores.gov.pt cesazores/ces:qld_api_{VERSION}
+docker run -d -p 5002:5002 -p 443:443 --name api cesazores/ces:qld_api_{VERSION}
 
 
 
@@ -15,6 +15,8 @@ docker login -u cesazores
 docker push cesazores/ces:qld_api_{VERSION}
 
 docker push cesazores/ces:qld_api_1
+
+docker pull cesazores/ces:qld_api_1
 
 
 # DEPLOY
