@@ -1,7 +1,9 @@
 version: "3.9"
+name: elasticsearch
 services:
 
   elasticsearch:
+    container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_STACK_VERSION}
     networks:
       elasticsearch:
@@ -28,6 +30,7 @@ services:
       - es_data:/usr/share/elasticsearch/data
 
   kibana:
+    container_name: kibana
     image: docker.elastic.co/kibana/kibana:${KIBANA_STACK_VERSION}
     networks:
       elasticsearch:
