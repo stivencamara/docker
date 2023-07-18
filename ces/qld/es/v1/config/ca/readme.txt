@@ -24,7 +24,7 @@ No windows pode ser feito tambem com o Openssl. Para isso basta correr os script
 
 openssl genpkey -algorithm RSA -des3 -out certificate-es-private-key.pem -pkeyopt rsa_keygen_bits:4096
 
-openssl req -new -config certificate-be.conf -key certificate-es-private-key.pem -out csr-es.pem
+openssl req -new -config certificate-es.conf -key certificate-es-private-key.pem -out csr-es.pem
 
 openssl x509 -req -in csr-es.pem -CA ca-certificate.pem -CAkey ca-private-key.pem -CAcreateserial -out certificate-es.pem -days 3650 -extfile certificate-ext.conf
 
