@@ -2,9 +2,10 @@ version: "2.2"
 name: elasticsearch
 services:
   setup:
+    container_name: setup
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     volumes:
-      - es_certs:/usr/share/elasticsearch/config/certs
+      - certs:/usr/share/elasticsearch/config/certs
     user: "0"
     command: >
       bash -c '
@@ -51,16 +52,18 @@ services:
       retries: 120
 
   es01:
+    container_name: es01
+    hostname: es01
     depends_on:
       setup:
         condition: service_healthy
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     networks:
-        elasticsearch:
-            ipv4_address: 172.25.1.3
+      elasticsearch:
+        ipv4_address: 172.25.1.3
     volumes:
-      - es_certs:/usr/share/elasticsearch/config/certs
-      - es1_data:/usr/share/elasticsearch/data
+      - certs:/usr/share/elasticsearch/config/certs
+      - esdata01:/usr/share/elasticsearch/data
     ports:
       - ${ES_PORT}:${ES_PORT}
     environment:
@@ -84,8 +87,8 @@ services:
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=${LICENSE}
       - network.publish_host=${NETWORK_PUBLISH_HOST_node1}
-      - network.host=${NETWORK_HOST}
-      - http.port=${ES_PORT}
+      #- network.host=${NETWORK_HOST}
+      #- http.port=${ES_PORT}
 
     mem_limit: ${MEM_LIMIT}
     ulimits:
@@ -103,15 +106,17 @@ services:
       retries: 120
 
   es02:
+    container_name: es02
+    hostname: es02
     depends_on:
       - es01
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     networks:
-        elasticsearch:
-            ipv4_address: 172.25.1.4
+      elasticsearch:
+        ipv4_address: 172.25.1.4
     volumes:
-      - es_certs:/usr/share/elasticsearch/config/certs
-      - es2_data:/usr/share/elasticsearch/data
+      - certs:/usr/share/elasticsearch/config/certs
+      - esdata02:/usr/share/elasticsearch/data
     ports:
       - ${ES_PORT2}:${ES_PORT2}
     environment:
@@ -144,13 +149,14 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -s --cacert config/certs/ca/ca.crt https://172.25.1.3:9200 | grep -q 'missing authentication credentials'",
+          "curl -s --cacert config/certs/ca/ca.crt https://192.168.1.70:9200 | grep -q 'missing authentication credentials'",
         ]
       interval: 10s
       timeout: 10s
       retries: 120
 
   kibana:
+    container_name: kibana
     depends_on:
       es01:
         condition: service_healthy
@@ -158,11 +164,11 @@ services:
       #  condition: service_healthy
     image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
     networks:
-        ces-network:
-            ipv4_address: 192.168.1.72
+        elasticsearch:
+          ipv4_address: 172.25.1.5
     volumes:
-      - es_certs:/usr/share/kibana/config/certs
-      - kibana_data:/usr/share/kibana/data
+      - certs:/usr/share/kibana/config/certs
+      - kibanadata:/usr/share/kibana/data
     ports:
       - ${KIBANA_PORT}:5601
     environment:
@@ -183,12 +189,13 @@ services:
       retries: 120
 
 volumes:
-  es_certs:
-  es1_data:
-  es2_data:
-  kibana_data:
+  certs:
+  esdata01:
+  esdata02:
+  kibanadata:
 
 networks:
   elasticsearch:
-    driver: overlay
     external: true
+    driver: overlay
+      
