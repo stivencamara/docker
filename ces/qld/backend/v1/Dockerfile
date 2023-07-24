@@ -11,6 +11,8 @@ ENV ASPNETCORE_Kestrel__Certificates__Default__Password=P@ssw0rd
 ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/usr/local/share/ca-certificates/qld-api-ces.pfx
 #ENV ASPNETCORE_ENVIRONMENT=Production
 
+RUN ["apt-get", "update"]
+RUN ["apt-get", "install", "-y", "nano"]
 RUN update-ca-certificates
 
 EXPOSE 80
