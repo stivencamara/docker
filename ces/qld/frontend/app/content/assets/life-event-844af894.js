@@ -1,1 +1,0 @@
-import{J as r}from"./index-920dbb37.js";const t=r("LifeEventStore",{state:()=>({progress:0,formToCompare:null}),getters:{},actions:{setProgress(e){this.progress=e},setFormToCompare(e){this.formToCompare=e}}});export{t as u};

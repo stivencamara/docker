@@ -4,6 +4,7 @@ services:
 
   mysql-server-1:
     container_name: mysql-server-1
+    hostname: mysql-server-1
     env_file:
       - mysql-server.env
     image: mysql/mysql-server:8.0.12
@@ -12,9 +13,11 @@ services:
     command: ["mysqld","--server_id=1","--binlog_checksum=NONE","--gtid_mode=ON","--enforce_gtid_consistency=ON","--log_bin","--log_bin_trust_function_creators=1","--log_slave_updates=ON","--master_info_repository=TABLE","--relay_log_info_repository=TABLE","--transaction_write_set_extraction=XXHASH64","--user=mysql","--skip-host-cache","--skip-name-resolve", "--default_authentication_plugin=mysql_native_password", "--lower_case_table_names=1"]
     networks:
       mysql:
+        #ipv4_address: 172.20.1.16
 
   mysql-server-2:
     container_name: mysql-server-2
+    hostname: mysql-server-2
     env_file:
       - mysql-server.env
     image: mysql/mysql-server:8.0.12
@@ -23,9 +26,11 @@ services:
       - "3302:3306"
     networks:
       mysql:
+        #ipv4_address: 172.20.1.17
 
   mysql-server-3:
     container_name: mysql-server-3
+    hostname: mysql-server-3
     env_file:
       - mysql-server.env
     image: mysql/mysql-server:8.0.12
@@ -34,6 +39,7 @@ services:
       - "3303:3306"
     networks:
       mysql:
+        #ipv4_address: 172.20.1.18
 
   mysql-shell:
     container_name: mysql-shell
@@ -48,6 +54,7 @@ services:
       - mysql-server-3
     networks:
       mysql:
+        #ipv4_address: 172.20.1.19
 
   mysql-router:
     container_name: mysql-router
@@ -64,6 +71,7 @@ services:
     restart: on-failure
     networks:
       mysql:
+        #ipv4_address: 172.20.1.20
 
   # dbwebapp:
   #   env_file:
@@ -76,5 +84,6 @@ services:
 
 networks:
   mysql:
-    external: true
-    driver: overlay
+    name: mysql
+    # external: true
+    # driver: overlay

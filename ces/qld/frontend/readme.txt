@@ -29,15 +29,19 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx.key -out nginx
 
 docker login -u cesazores
 
-docker tag cesazores/ces:qld_app_{VERSION} cesazores/ces:qld_app_{VERSION}
+docker build -t cesazores/ces:qld_app_{VERSION} .
 
-docker push cesazores/ces:qld_app_{VERSION}
+docker build -t cesazores/ces:qld_app_3 .
+
+docker push cesazores/ces:qld_app_3
 
 
 # DOCKER PULL IMAGE
 sudo docker image pull cesazores/ces:qld_app_{VERSION}
 
 sudo docker run -d --restart always -p 5000:5000 -p 443:443 --name qld-ces.azores.pt cesazores/ces:qld_app_{VERSION}
+
+sudo docker run -d --restart always -p 5000:5000 -p 443:443 --name qld-ces.azores.pt cesazores/ces:qld_app_1
 
 # BROWSER
 

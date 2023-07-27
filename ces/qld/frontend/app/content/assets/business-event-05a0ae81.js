@@ -1,1 +1,0 @@
-import{v as s}from"./index-920dbb37.js";const n={search:e=>s.post("/settings/businessevent/search",e),create:e=>s.post("/settings/businessevent",e),update:e=>s.put("/settings/businessevent",e),delete:e=>s.delete(`/settings/businessevent/${e}`),getById:e=>s.get(`/settings/businessevent/${e}`)};export{n as b};

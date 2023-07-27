@@ -1,1 +1,0 @@
-import{y as t}from"./index-5b4ebf84.js";const r={search:e=>t.post("/settings/refusaltype/search",e),create:e=>t.post("/settings/refusaltype",e),update:e=>t.put("/settings/refusaltype",e),delete:e=>t.delete(`/settings/refusaltype/${e}`),getById:e=>t.get(`/settings/refusaltype/${e}`)};export{r};

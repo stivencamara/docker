@@ -1,0 +1,1 @@
+import{n as t}from"./index-d8a56bcc.js";const i={search:e=>t.post("/settings/legislation/search",e),create:e=>t.post("/settings/legislation",e),update:e=>t.put("/settings/legislation",e),getById:e=>t.get(`/settings/legislation/${e}`),delete:e=>t.delete(`/settings/legislation/${e}`)};export{i as l};
