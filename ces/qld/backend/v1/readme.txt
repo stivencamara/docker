@@ -2,13 +2,13 @@
 
 docker build -t cesazores/ces:qld_api_{VERSION} .
 
-docker build -t cesazores/ces:qld_api_1 .
+docker build -t cesazores/ces:qld_api_2 .
 
 docker run -d -p 5002:5002 -p 443:443 --name api cesazores/ces:qld_api_{VERSION}
 
 docker run -d -p 5002:5002 -p 443:443 --network backend --name api cesazores/ces:qld_api_{VERSION}
 
-docker run -d -p 5002:5002 -p 443:443 --network backend --name api cesazores/ces:qld_api_1
+docker run -d -p 5002:5002 -p 443:443 --network backend --name api cesazores/ces:qld_api_2
 
 
 
@@ -16,11 +16,15 @@ docker run -d -p 5002:5002 -p 443:443 --network backend --name api cesazores/ces
 
 docker login -u cesazores
 
+docker build -t cesazores/ces:qld_app_{VERSION} .
+
+docker build -t cesazores/ces:qld_api_3 .
+
 docker push cesazores/ces:qld_api_{VERSION}
 
-docker push cesazores/ces:qld_api_1
+docker push cesazores/ces:qld_api_3
 
-docker pull cesazores/ces:qld_api_1
+docker pull cesazores/ces:qld_api_3
 
 
 # DEPLOY
