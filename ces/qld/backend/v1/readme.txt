@@ -10,6 +10,8 @@ docker run -d -p 5002:5002 -p 443:443 --network backend --name api cesazores/ces
 
 docker run -d -p 5002:5002 -p 443:443 --network backend --name api cesazores/ces:qld_api_2
 
+docker run -d -p 5002:5002 -p 443:443 --name api cesazores/ces:qld_api_2
+
 
 
 # DOCKER HUB

@@ -1,0 +1,1 @@
+import{n as s}from"./index-a3ba1ed7.js";const t={search:e=>s.post("/users/search",e),create:e=>s.post("/users",e),update:e=>s.put("/users",e),getById:e=>s.get(`/users/${e}`),delete:e=>s.delete(`/users/${e}`),getLists:e=>s.get(`/users/lists/${e}`),changePassword:e=>s.put("/users/changepassword",e)};export{t as u};
