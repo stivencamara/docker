@@ -1,0 +1,41 @@
+version: "3.9"
+name: mysql
+x-common-extra-hosts: &common-extra-hosts
+  extra_hosts:
+    - "qualidade-db-ces.azores.gov.pt:192.168.1.10"
+    - "qualidade-redis-ces.azores.gov.pt:192.168.1.20"
+    - "qualidade-es01-ces.azores.gov.pt:192.168.1.30"
+    - "qualidade-kafka1-ces.azores.gov.pt:192.168.1.50"
+    - "qualidade-fe-ces.azores.gov.pt:192.168.1.80"
+    - "qualidade-api-ces.azores.gov.pt:192.168.1.90"
+services:
+  mysql:
+      container_name: mysql
+      env_file:
+        - ./MySql/MySql.env
+      networks:
+        babel-network:
+            ipv4_address: 192.168.1.10
+      build: 
+        context: .
+        dockerfile: MySqlDockerfile
+      command: ["--default-authentication-plugin=mysql_native_password","--log_bin_trust_function_creators=1", "--lower_case_table_names=1"]
+      environment:
+        MYSQL_ROOT_PASSWORD: P@ssw0rd
+      restart: always
+      volumes:
+      - mysql_data:/var/lib/mysql
+      ports:
+      - 3306:3306
+volumes:
+  mysql_data:
+    driver: local
+   
+networks:
+  babel-network:
+    name: babel-network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.1.0/24

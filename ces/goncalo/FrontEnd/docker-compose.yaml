@@ -1,0 +1,38 @@
+version: "3.9"
+name: frontend
+x-common-extra-hosts: &common-extra-hosts
+  extra_hosts:
+    - "qualidade-db-ces.azores.gov.pt:192.168.1.10"
+    - "qualidade-redis-ces.azores.gov.pt:192.168.1.20"
+    - "qualidade-es01-ces.azores.gov.pt:192.168.1.30"
+    - "qualidade-kafka1-ces.azores.gov.pt:192.168.1.50"
+    - "qualidade-fe-ces.azores.gov.pt:192.168.1.80"
+    - "qualidade-api-ces.azores.gov.pt:192.168.1.90"
+    
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: ./FrontEnd/FrontEndDockerfile
+    ports:
+      - 5001:5001
+      - 444:444
+    <<: *common-extra-hosts
+    volumes:
+      - frontend_data:/usr/share/nginx/html
+    restart: always
+    networks:
+        babel-network:
+            ipv4_address: 192.168.1.80
+
+volumes:
+  frontend_data:
+   
+networks:
+  babel-network:
+    name: babel-network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.1.0/24

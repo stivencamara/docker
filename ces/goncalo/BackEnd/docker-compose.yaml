@@ -1,0 +1,41 @@
+version: "3.9"
+name: backend
+x-common-extra-hosts: &common-extra-hosts
+  extra_hosts:
+    - "qualidade-db-ces.azores.gov.pt:192.168.1.10"
+    - "qualidade-redis-ces.azores.gov.pt:192.168.1.20"
+    - "qualidade-es01-ces.azores.gov.pt:192.168.1.30"
+    - "qualidade-es02-ces.azores.gov.pt:192.168.1.31"
+    - "qualidade-kafka1-ces.azores.gov.pt:192.168.1.50"
+    - "qualidade-fe-ces.azores.gov.pt:192.168.1.80"
+    - "qualidade-api-ces.azores.gov.pt:192.168.1.90"
+    
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./BackEnd/BackEndDockerfile
+    ports:
+      - 443:443
+    <<: *common-extra-hosts  
+    volumes:
+      - backend_data:/api
+    restart: always
+    networks:
+        babel-network:
+            ipv4_address: 192.168.1.90
+
+
+
+volumes:
+ backend_data:
+
+   
+networks:
+  babel-network:
+    name: babel-network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.1.0/24

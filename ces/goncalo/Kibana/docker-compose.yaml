@@ -1,0 +1,40 @@
+version: "3.9"
+name: kibana
+x-common-extra-hosts: &common-extra-hosts
+  extra_hosts:
+    - "qualidade-db-ces.azores.gov.pt:192.168.1.10"
+    - "qualidade-redis-ces.azores.gov.pt:192.168.1.20"
+    - "qualidade-es01-ces.azores.gov.pt:192.168.1.30"
+    - "qualidade-es02-ces.azores.gov.pt:192.168.1.31"
+    - "qualidade-kafka1-ces.azores.gov.pt:192.168.1.50"
+    - "qualidade-fe-ces.azores.gov.pt:192.168.1.80"
+    - "qualidade-api-ces.azores.gov.pt:192.168.1.90"
+    
+services:
+  kibana:
+    container_name: kibana
+    env_file:
+      - ./Kibana/Kibana.env
+    build:
+      context: .
+      dockerfile: ./Kibana/KibanaDockerfile
+    networks:
+      babel-network:
+        ipv4_address: 192.168.1.40
+    ports:
+      - 5601:5601
+    <<: *common-extra-hosts
+    volumes:
+      - kibana_data:/usr/share/kibana/data
+ 
+volumes:
+ kibana_data:
+ 
+networks:
+  babel-network:
+    name: babel-network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.1.0/24

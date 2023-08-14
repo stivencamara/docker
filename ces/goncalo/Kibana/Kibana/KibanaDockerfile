@@ -1,0 +1,8 @@
+#caminho da imagem que queremos
+FROM docker.elastic.co/kibana/kibana:8.6.2
+
+RUN /usr/share/kibana/bin/kibana-keystore create
+
+#copy CA
+COPY ./Kibana/certs/CA/ca-certificate.pem /usr/share/kibana/config/certs/CA/ca-certificate.pem
+COPY ./Kibana/config/kibana.yml /usr/share/kibana/config/kibana.yml
