@@ -1,7 +1,7 @@
 FROM nginx:latest
 
-COPY ./FrontEnd/content/ /usr/share/nginx/html
-COPY ./FrontEnd/FrontEndnginx.conf /etc/nginx/conf.d/default.conf
+COPY ./content/ /usr/share/nginx/html
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 #COPY ./FrontEnd/certs/certificate-private-key.pem /etc/nginx/ssl/certificate-private-key.pem
 #COPY ./FrontEnd/certs/certificate.pem /etc/nginx/ssl/certificate.pem
 
@@ -11,12 +11,12 @@ COPY ./FrontEnd/FrontEndnginx.conf /etc/nginx/conf.d/default.conf
 
 
 #copy CA
-COPY ./FrontEnd/certs/qualidade-fe-ces.azores.gov.pt/CA/ca-certificate.pem /usr/local/share/ca-certificates/qualidade-fe-ces.azores.gov.pt.ca-certificate.crt
-COPY ./FrontEnd/certs/qualidade-fe-ces.azores.gov.pt/CA/ca-private-key.pem /usr/local/share/ca-certificates/qualidade-fe-ces.azores.gov.pt.ca-private-key.pem
+COPY ./certs/qualidade-fe-ces.azores.gov.pt/CA/ca-certificate.pem /usr/local/share/ca-certificates/qualidade-fe-ces.azores.gov.pt.ca-certificate.crt
+COPY ./certs/qualidade-fe-ces.azores.gov.pt/CA/ca-private-key.pem /usr/local/share/ca-certificates/qualidade-fe-ces.azores.gov.pt.ca-private-key.pem
 
 #copy Certificate Configuration Files
-COPY ./FrontEnd/certs/qualidade-fe-ces.azores.gov.pt/certs/certificate.conf /usr/local/share/ca-certificates/config/certs/qualidade-fe-ces.azores.gov.pt/certs/certificate.conf
-COPY ./FrontEnd/certs/qualidade-fe-ces.azores.gov.pt/certs/certificate-ext.conf /usr/local/share/ca-certificates/config/certs/qualidade-fe-ces.azores.gov.pt/certs/certificate-ext.conf
+COPY ./certs/qualidade-fe-ces.azores.gov.pt/certs/certificate.conf /usr/local/share/ca-certificates/config/certs/qualidade-fe-ces.azores.gov.pt/certs/certificate.conf
+COPY ./certs/qualidade-fe-ces.azores.gov.pt/certs/certificate-ext.conf /usr/local/share/ca-certificates/config/certs/qualidade-fe-ces.azores.gov.pt/certs/certificate-ext.conf
 
 #generating certificate signed with copied CA
 RUN openssl genrsa -out /usr/local/share/ca-certificates/config/certs/qualidade-fe-ces.azores.gov.pt/certs/fe01.key 2048 \

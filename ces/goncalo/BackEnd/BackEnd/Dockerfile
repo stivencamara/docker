@@ -1,14 +1,14 @@
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /api
-COPY ./BackEnd/content .
+COPY ./content .
 
 #copy CA
-COPY ./BackEnd/certs/qualidade-api-ces.azores.gov.pt/CA/ca-certificate.pem /usr/local/share/ca-certificates/qualidade-api-ces.azores.gov.pt.ca-certificate.crt
-COPY ./BackEnd/certs/qualidade-api-ces.azores.gov.pt/CA/ca-private-key.pem /usr/local/share/ca-certificates/qualidade-api-ces.azores.gov.pt.ca-private-key.pem
+COPY ./certs/qualidade-api-ces.azores.gov.pt/CA/ca-certificate.pem /usr/local/share/ca-certificates/qualidade-api-ces.azores.gov.pt.ca-certificate.crt
+COPY ./certs/qualidade-api-ces.azores.gov.pt/CA/ca-private-key.pem /usr/local/share/ca-certificates/qualidade-api-ces.azores.gov.pt.ca-private-key.pem
 
 #copy Certificate Configuration Files
-COPY ./BackEnd/certs/qualidade-api-ces.azores.gov.pt/certs/certificate.conf /usr/local/share/ca-certificates/config/certs/qualidade-api-ces.azores.gov.pt/certs/certificate.conf
-COPY ./BackEnd/certs/qualidade-api-ces.azores.gov.pt/certs/certificate-ext.conf /usr/local/share/ca-certificates/config/certs/qualidade-api-ces.azores.gov.pt/certs/certificate-ext.conf
+COPY ./certs/qualidade-api-ces.azores.gov.pt/certs/certificate.conf /usr/local/share/ca-certificates/config/certs/qualidade-api-ces.azores.gov.pt/certs/certificate.conf
+COPY ./certs/qualidade-api-ces.azores.gov.pt/certs/certificate-ext.conf /usr/local/share/ca-certificates/config/certs/qualidade-api-ces.azores.gov.pt/certs/certificate-ext.conf
 
 #generating certificate signed with copied CA
 RUN openssl genrsa -out /usr/local/share/ca-certificates/config/certs/qualidade-api-ces.azores.gov.pt/certs/api01.key 2048 \
