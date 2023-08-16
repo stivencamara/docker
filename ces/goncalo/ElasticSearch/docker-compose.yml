@@ -1,0 +1,76 @@
+version: "3.9"
+name: elasticsearch
+x-common-extra-hosts: &common-extra-hosts
+  extra_hosts:
+    - "qualidade-db-ces.azores.gov.pt:192.168.1.10"
+    - "qualidade-redis-ces.azores.gov.pt:192.168.1.20"
+    - "qualidade-es01-ces.azores.gov.pt:192.168.1.30"
+    - "qualidade-es02-ces.azores.gov.pt:192.168.1.31"
+    - "qualidade-kafka1-ces.azores.gov.pt:192.168.1.50"
+    - "qualidade-fe-ces.azores.gov.pt:192.168.1.80"
+    - "qualidade-api-ces.azores.gov.pt:192.168.1.90"
+
+services:
+
+  es01:
+    container_name: es01
+    hostname: qualidade-es01-ces.azores.gov.pt
+    image: elasticsearch:${ELASTIC_STACK_VERSION}
+    networks:
+      babel-network:
+        ipv4_address: 192.168.1.30
+    environment:
+      #network.host: 0.0.0.0
+      cluster.name: ${CLUSTER_NAME}
+      discovery.type: single-node
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      xpack.license.self_generated.type: basic
+      bootstrap.memory_lock: true
+      xpack.security.enabled: false
+      xpack.security.http.ssl.enabled: false
+      xpack.security.transport.ssl.enabled: false
+      #xpack.monitoring.enabled: "true"
+      network.publish_host: qualidade-es01-ces.azores.gov.pt
+    ports:
+      - 9200:9200
+      - 9300:9300
+    <<: *common-extra-hosts
+    mem_limit: ${MEM_LIMIT}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es01_data:/usr/share/elasticsearch/data
+
+  kibana:
+    container_name: kibana
+    image: kibana:${KIBANA_STACK_VERSION}
+    networks:
+      babel-network:
+        ipv4_address: 192.168.1.40
+    depends_on:
+      - es01
+    #     condition: service_healthy
+    ports:
+      - 5601:5601
+    <<: *common-extra-hosts
+    environment:
+      ELASTICSEARCH_HOSTS: http://es01:9200
+      SERVERNAME: kibana
+      ELASTICSEARCH_USERNAME: kibana_system
+      ELASTICSEARCH_PASSWORD: ${KIBANA_PASSWORD}
+    mem_limit: ${MEM_LIMIT}
+    volumes:
+      - kibana_data:/usr/share/kibana/data
+
+
+volumes:
+  es01_data:
+  kibana_data:
+
+networks:
+  babel-network:
+    driver: overlay
+    external: true
+      
