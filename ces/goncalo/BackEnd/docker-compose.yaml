@@ -33,5 +33,9 @@ volumes:
    
 networks:
   babel-network:
-    external: true
-    driver: overlay
+    name: babel-network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.1.0/24
