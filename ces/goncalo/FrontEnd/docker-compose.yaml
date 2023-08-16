@@ -15,8 +15,8 @@ services:
       context: .
       dockerfile: ./FrontEnd/FrontEndDockerfile
     ports:
-      - 5001:5001
-      - 444:444
+      - 5000:5000
+      - 443:443
     <<: *common-extra-hosts
     volumes:
       - frontend_data:/usr/share/nginx/html
