@@ -36,10 +36,14 @@ volumes:
   es01_data:
 
 networks:
+  # babel-network:
+  #   name: babel-network
+  #   driver: bridge
+  #   ipam:
+  #     driver: default
+  #     config:
+  #       - subnet: 192.168.1.0/24
+
   babel-network:
-    name: babel-network
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 192.168.1.0/24
+  external: true
+  driver: overlay
