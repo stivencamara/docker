@@ -106,6 +106,7 @@ services:
       xpack.security.transport.ssl.enabled: false
       #ES_JAVA_OPTS: -Xms2g -Xmx2g
       #xpack.monitoring.enabled: "true"
+      network.publish_host: 
     ports:
       - 9200:9200
       - 9300:9300
