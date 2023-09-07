@@ -18,7 +18,7 @@ services:
     env_file:
       - ./BackEnd/BackEndEnvironment.env
     ports:
-      - 444:444
+      - 443:443
     <<: *common-extra-hosts  
     mem_limit: ${MEM_LIMIT}
     volumes:
