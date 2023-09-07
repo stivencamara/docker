@@ -4,7 +4,7 @@ CREATE TABLE Legislations (
     PK_Legislation_Id         INT            AUTO_INCREMENT NOT NULL,
     Code                      NVARCHAR (64)  NOT NULL,
     Name                      NVARCHAR (255) NOT NULL,
-    Url                       NVARCHAR (128) NULL,
+    Url                       NVARCHAR (2048) NULL,
     FK_Document_Attachment_Id INT            NULL,
     Created                   DATETIME       NOT NULL,
     Created_By                NVARCHAR (128) NOT NULL,
@@ -682,7 +682,7 @@ CREATE TABLE Auth_Clients (
     Client_Secret NVARCHAR (36) NOT NULL,
     Name          NVARCHAR (128)   NOT NULL,
     Description   MEDIUMTEXT   NULL,
-    Redirect_Url  NVARCHAR (512)   NULL,
+    Redirect_Url  NVARCHAR (2048)   NULL,
     Active        BIT              NOT NULL,
     CONSTRAINT PK_Auth_Clients PRIMARY KEY CLUSTERED (PK_Client_Id ASC)
 );
