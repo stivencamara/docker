@@ -15,9 +15,12 @@ services:
     build:
       context: .
       dockerfile: ./BackEnd/BackEndDockerfile
+    env_file:
+      - ./BackEnd/BackEndEnvironment.env
     ports:
-      - 443:443
+      - 444:444
     <<: *common-extra-hosts  
+    mem_limit: ${MEM_LIMIT}
     volumes:
       - backend_data:/api
     restart: always
@@ -32,6 +35,14 @@ volumes:
 
    
 networks:
+#  babel-network:
+#    name: babel-network
+#    driver: bridge
+#    ipam:
+#      driver: default
+#      config:
+#        - subnet: 192.168.1.0/24
+
   babel-network:
     external: true
-    driver: overlay
+    driver: overlay  

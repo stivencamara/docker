@@ -16,8 +16,14 @@ RUN openssl genrsa -out /usr/local/share/ca-certificates/config/certs/qualidade-
 && openssl x509 -req -in /usr/local/share/ca-certificates/config/certs/qualidade-api-ces.azores.gov.pt/certs/api01.csr -CA /usr/local/share/ca-certificates/qualidade-api-ces.azores.gov.pt.ca-certificate.crt -CAkey /usr/local/share/ca-certificates/qualidade-api-ces.azores.gov.pt.ca-private-key.pem -passin pass:123QWEasdZXC -CAcreateserial -out /usr/local/share/ca-certificates/config/certs/qualidade-api-ces.azores.gov.pt/certs/api01.crt -extfile /usr/local/share/ca-certificates/config/certs/qualidade-api-ces.azores.gov.pt/certs/certificate-ext.conf -days 365 \
 && openssl pkcs12 -export -out /usr/local/share/ca-certificates/config/certs/qualidade-api-ces.azores.gov.pt/certs/api01.pfx -passout pass:"123QWEasdZXC" -inkey /usr/local/share/ca-certificates/config/certs/qualidade-api-ces.azores.gov.pt/certs/api01.key -passin pass:"123QWEasdZXC" -in /usr/local/share/ca-certificates/config/certs/qualidade-api-ces.azores.gov.pt/certs/api01.crt
 
-ENV ASPNETCORE_URLS=https://*:443;http://*:5001
-ENV ASPNETCORE_HTTP_PORT=5001
+
+
+
+
+
+
+ENV ASPNETCORE_URLS=https://*:443;http://*:80
+ENV ASPNETCORE_HTTP_PORT=80
 ENV ASPNETCORE_HTTPS_PORT=443
 
 ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/usr/local/share/ca-certificates/config/certs/qualidade-api-ces.azores.gov.pt/certs/api01.pfx
