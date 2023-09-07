@@ -14,10 +14,13 @@ services:
     build:
       context: .
       dockerfile: ./FrontEnd/FrontEndDockerfile
+    env_file:
+      - ./FrontEnd/FrontEndEnvironment.env
     ports:
-      - 5000:5000
+      - 5001:5001
       - 443:443
     <<: *common-extra-hosts
+    mem_limit: ${MEM_LIMIT}
     volumes:
       - frontend_data:/usr/share/nginx/html
     restart: always
@@ -27,8 +30,16 @@ services:
 
 volumes:
   frontend_data:
-   
+
 networks:
+#  babel-network:
+#    name: babel-network
+#    driver: bridge
+#    ipam:
+#      driver: default
+#      config:
+#        - subnet: 192.168.1.0/24
+   
   babel-network:
     external: true
     driver: overlay

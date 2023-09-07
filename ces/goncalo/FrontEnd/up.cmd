@@ -1,1 +1,1 @@
-docker compose up -d
+docker compose --env-file FrontEnd/FrontEndEnvironment.env -f docker-compose.yaml up -d
