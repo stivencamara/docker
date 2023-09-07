@@ -26,7 +26,6 @@ services:
     <<: *common-extra-hosts
     volumes:
       - kibana_data:/usr/share/kibana/data
-    mem_limit: ${MEM_LIMIT}
  
 volumes:
  kibana_data:

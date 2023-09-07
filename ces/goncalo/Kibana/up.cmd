@@ -1,1 +1,1 @@
-docker compose --env-file Kibana/Kibana.env -f docker-compose.yaml up -d
+docker compose up -d
