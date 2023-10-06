@@ -527,3 +527,6 @@ ALTER TABLE Document_Refusal
 
 ALTER TABLE Check_List_Texts
     ADD CONSTRAINT FK_Check_List_Texts_Check_Lists FOREIGN KEY (FK_Check_List_Id) REFERENCES Check_Lists (PK_Check_List_Id);
+
+ALTER TABLE Import_Status
+    ADD CONSTRAINT FK_Import_Status_Users FOREIGN KEY (FK_User_Id) REFERENCES Users (PK_User_Id);

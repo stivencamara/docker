@@ -21,10 +21,11 @@ DROP PROCEDURE IF EXISTS Unlock_Timer_Job;
 CREATE PROCEDURE Unlock_Timer_Job
 (
 	IN pTimer_Job_Id nvarchar(64),
-	IN pMachine_Name nvarchar(64),
-    OUT pReturn BIT 
+	IN pMachine_Name nvarchar(64)
 )
 BEGIN
+	DECLARE pReturn BIT;
+
      IF EXISTS (SELECT * FROM Control_Timer_Jobs  
 				WHERE PK_Timer_Job_Id = pTimer_Job_Id AND Machine_Name = pMachine_Name) THEN
             UPDATE Control_Timer_Jobs
@@ -35,6 +36,8 @@ BEGIN
      ELSE
         SET pReturn = 0;
 	END IF;
+
+	SELECT pReturn;
 END;
 
 
@@ -57,10 +60,11 @@ DROP PROCEDURE IF EXISTS Lock_Timer_Job;
 CREATE PROCEDURE Lock_Timer_Job
 (
 	IN pTimer_Job_Id nvarchar(64),
-	IN pMachine_Name nvarchar(64),
-    OUT pReturn BIT
+	IN pMachine_Name nvarchar(64)
 )
 BEGIN
+	DECLARE pReturn BIT;
+
      IF EXISTS (SELECT * FROM Control_Timer_Jobs WHERE 
 				PK_Timer_Job_Id = pTimer_Job_Id AND Machine_Name IS NULL) THEN
 		UPDATE Control_Timer_Jobs
@@ -71,6 +75,8 @@ BEGIN
      ELSE
         SET pReturn = 0;
 	END IF;
+
+	SELECT pReturn;
 END;
 
 DROP PROCEDURE IF EXISTS DateTreeView;
@@ -94,6 +100,13 @@ BEGIN
 	-- Coloca as horas para 23h59.59 na data
 	SET pFilter_Date = DATE_ADD(pFilter_Date, INTERVAL 1 DAY) - INTERVAL 1 SECOND;
 
+    CREATE TEMPORARY TABLE vMainTempTable (PK_Organization_Id INT, PK_Organization_Version INT, Fk_Organization_Parent_Id INT, Fk_Organization_Parent_Version INT, Level INT,
+									Name VARCHAR(1024), Can_Have_Points_Of_Care BIT, Can_Have_Services BIT, Group_Name INT, FK_Record_State_Type_Id INT, Organization_Active BIT,
+									Service_Id INT, Service_Version INT, Service_Name VARCHAR(1024), Service_Record_State_Type_Id INT, Service_Active BIT,
+									Poc_Id INT, Poc_Version INT, Poc_Name VARCHAR(1024), Poc_Record_State_Type_Id INT, Poc_Active BIT,
+									Poc_Service_Id INT, Poc_Service_Version INT, Poc_Service_Name VARCHAR(1024), Poc_Service_Record_State_Type_Id INT, Poc_Service_Active BIT, Poc_Service_External BIT,
+                                    Approved_Date DATETIME, Obsoleted_Date DATETIME);
+
 	-- Caso não passem o Id/Version 
 	-- Vai buscar a entidade Açores
 	IF (pOrganization_Id IS NULL OR pOrganization_Version IS NULL) THEN
@@ -106,13 +119,6 @@ BEGIN
 		((FK_Record_State_Type_Id = vObsoleted_State AND pFilter_Date < Updated))); 
 	END IF;
 
-    CREATE TEMPORARY TABLE vMainTempTable (PK_Organization_Id INT, PK_Organization_Version INT, Fk_Organization_Parent_Id INT, Fk_Organization_Parent_Version INT, Level INT,
-									Name VARCHAR(1024), Can_Have_Points_Of_Care BIT, Can_Have_Services BIT, Group_Name INT, FK_Record_State_Type_Id INT, Organization_Active BIT,
-									Service_Id INT, Service_Version INT, Service_Name VARCHAR(1024), Service_Record_State_Type_Id INT, Service_Active BIT,
-									Poc_Id INT, Poc_Version INT, Poc_Name VARCHAR(1024), Poc_Record_State_Type_Id INT, Poc_Active BIT,
-									Poc_Service_Id INT, Poc_Service_Version INT, Poc_Service_Name VARCHAR(1024), Poc_Service_Record_State_Type_Id INT, Poc_Service_Active BIT, Poc_Service_External BIT,
-                                    Approved_Date DATETIME, Obsoleted_Date DATETIME);
-
 	INSERT INTO vMainTempTable (PK_Organization_Id, PK_Organization_Version, Fk_Organization_Parent_Id, Fk_Organization_Parent_Version, Level, 
 					Can_Have_Points_Of_Care, Can_Have_Services, Group_Name, FK_Record_State_Type_Id, Organization_Active, Approved_Date, Obsoleted_Date)
 	(
@@ -121,17 +127,16 @@ BEGIN
                     Approved_Date, Obsoleted_Date
 		FROM (
 			SELECT o.PK_Organization_Id, o.PK_Organization_Version, oo.Fk_Organization_Parent_Id, oo.Fk_Organization_Parent_Version, 0 AS Level,
-				 o.FK_Record_State_Type_Id, o.Approved AS Approved_Date, oo.Obsoleted_Date,
+				5 AS FK_Record_State_Type_Id, o.Approved AS Approved_Date, oo.Obsoleted_Date,
 				 o.Can_Have_Points_Of_Care, o.Can_Have_Services, o.Group_Name, o.Organization_Active,
-				ROW_NUMBER() OVER (PARTITION BY oo.FK_Organization_Id ORDER BY COALESCE(oo.Obsoleted_Date, oo.Approved_Date, oo.Created_Date) DESC) AS rn
+				ROW_NUMBER() OVER (PARTITION BY oo.FK_Organization_Id) AS rn
 			FROM      Organizations AS o LEFT JOIN
 								Organizations_Organizations AS oo
 								ON o.PK_Organization_Id = oo.FK_Organization_Id AND
 									o.PK_Organization_Version = oo.FK_Organization_Version
 			WHERE   
 				o.Approved <= pFilter_Date AND
-				((o.FK_Record_State_Type_Id = vPublished_State) OR 
-				(o.FK_Record_State_Type_Id = vObsoleted_State AND oo.Obsoleted_Date > pFilter_Date ))
+                (oo.Obsoleted_Date IS NULL OR oo.Obsoleted_Date > pFilter_Date) 
 			) AS sub
 			WHERE rn = 1
 		);
@@ -146,10 +151,9 @@ BEGIN
 						 FK_Record_State_Type_Id, Approved_Date, Obsoleted_Date,
 						 Can_Have_Points_Of_Care, Can_Have_Services, Group_Name, Organization_Active
 				FROM      vMainTempTable
-				WHERE   PK_Organization_Id = pOrganization_Id AND PK_Organization_Version = pOrganization_Version AND
+				WHERE   PK_Organization_Id = pOrganization_Id AND PK_Organization_Version = pOrganization_Version /*AND
 						Approved_Date <= pFilter_Date AND
-						((FK_Record_State_Type_Id = vPublished_State) OR 
-						(FK_Record_State_Type_Id = vObsoleted_State AND Obsoleted_Date > pFilter_Date ))
+						(Obsoleted_Date IS NULL OR Obsoleted_Date > pFilter_Date) */
 
 				UNION ALL
 
@@ -159,10 +163,9 @@ BEGIN
 				FROM   vMainTempTable_1 t2
 				
 				JOIN RecursiveCTE AS cte ON cte.PK_Organization_Id = t2.Fk_Organization_Parent_Id AND cte.PK_Organization_Version = t2.FK_Organization_Parent_Version
-				WHERE cte.Level < pLevel AND 
+				WHERE cte.Level < pLevel /*AND 
 						t2.Approved_Date <= pFilter_Date AND
-						((t2.FK_Record_State_Type_Id = vPublished_State) OR 
-						(t2.FK_Record_State_Type_Id = vObsoleted_State AND t2.Obsoleted_Date > pFilter_Date ))
+						(t2.Obsoleted_Date IS NULL OR t2.Obsoleted_Date > pFilter_Date) */
 	)
 
 	SELECT cte.PK_Organization_Id, cte.PK_Organization_Version, cte.Fk_Organization_Parent_Id, cte.Fk_Organization_Parent_Version, cte.Level,
@@ -184,8 +187,7 @@ BEGIN
 				LEFT JOIN Service_Texts AS s1 ON s0.PK_Service_Id = s1.FK_Service_Id AND s0.PK_Service_Version = s1.FK_Service_Version
 				WHERE s1.Language = pLanguage AND 
 						s.Approved_Date <= pFilter_Date AND
-						((s0.FK_Record_State_Type_Id = vPublished_State) OR 
-						(s0.FK_Record_State_Type_Id = vObsoleted_State AND s.Obsoleted_Date > pFilter_Date ))
+						(s.Obsoleted_Date IS NULL OR s.Obsoleted_Date > pFilter_Date) 
 			) AS t0 ON cte.PK_Organization_Id = t0.FK_Organization_Parent_Id AND cte.PK_Organization_Version = t0.FK_Organization_Parent_Version
 			
 
@@ -203,14 +205,12 @@ BEGIN
 					INNER JOIN Services AS s3 ON s2.FK_Service_Id = s3.PK_Service_Id AND s2.FK_Service_Version = s3.PK_Service_Version
 					LEFT JOIN Service_Texts AS s4 ON s3.PK_Service_Id = s4.FK_Service_Id AND s3.PK_Service_Version = s4.FK_Service_Version
 					WHERE s4.Language = pLanguage AND 
-						s2.Approved_Date <= pFilter_Date AND
-						((s3.FK_Record_State_Type_Id = vPublished_State) OR 
-						(s3.FK_Record_State_Type_Id = vObsoleted_State AND s2.Obsoleted_Date > pFilter_Date ))
+						s2.Approved_Date <= pFilter_Date AND 
+						(s2.Obsoleted_Date IS NULL OR s2.Obsoleted_Date > pFilter_Date) 
 				) AS t2 ON p0.PK_Point_Of_Care_Id = t2.FK_Point_Of_Care_Id AND p0.PK_Point_Of_Care_Version = t2.FK_Point_Of_Care_Version
 				WHERE p1.Language = pLanguage AND 
 						p.Approved_Date <= pFilter_Date AND
-						((p0.FK_Record_State_Type_Id = vPublished_State) OR 
-						(p0.FK_Record_State_Type_Id = vObsoleted_State AND p.Obsoleted_Date > pFilter_Date ))
+						(p.Obsoleted_Date IS NULL OR p.Obsoleted_Date > pFilter_Date) 
 			) AS t1 ON cte.PK_Organization_Id = t1.FK_Organization_Parent_Id AND cte.PK_Organization_Version = t1.FK_Organization_Parent_Version
 
 			WHERE texts.Language = pLanguage
@@ -375,10 +375,10 @@ BEGIN
 					-- Actualiza essas entidades com as versões e estados, das versões não publicadas
 					UPDATE vtemp2 
                     INNER JOIN vtemp1
-                    ON vtemp1.PK_Organization_Id = vtemp2.PK_Organization_Id
-					SET PK_Organization_Version = vtemp1.PK_Organization_Version, 
-						Name = vtemp1.Name, 
-                        FK_Record_State_Type_Id = vtemp1.FK_Record_State_Type_Id;
+                    ON vtemp2.PK_Organization_Id = vtemp1.PK_Organization_Id
+					SET vtemp2.PK_Organization_Version = vtemp1.PK_Organization_Version, 
+						vtemp2.Name = vtemp1.Name, 
+                        vtemp2.FK_Record_State_Type_Id = vtemp1.FK_Record_State_Type_Id;
 					
 					-- Acrescenta essas entidades na temp principal
 					INSERT INTO vMainTempTable SELECT * FROM vtemp2;
@@ -386,10 +386,8 @@ BEGIN
 			END IF;
 
 			-- Retorna toda a informação
-            select '1';
 			SELECT * FROM vMainTempTable 
 				ORDER BY PK_Organization_Id, PK_Organization_Version, Level;
-			select '2';
 			
 	-- Clear ALL
     DROP TEMPORARY TABLE IF EXISTS vtemp1;
@@ -459,6 +457,7 @@ CREATE PROCEDURE GetTreeView
 BEGIN
 
 	DECLARE vPublished_State INT DEFAULT 5;
+	DECLARE vExtincted_State INT DEFAULT 9;
 
 	-- Caso não passem o Id, vai buscar a entidade Açores
 	-- Caso não passem a versão, vai buscar a versão publicada desse Id
@@ -474,21 +473,21 @@ BEGIN
 		WHERE PK_Organization_Id = pOrganization_Id AND FK_Record_State_Type_Id = vPublished_State; 
     END IF;
 
-	WITH RECURSIVE RecursiveCTE (PK_Organization_Id, PK_Organization_Version, Fk_Organization_Parent_Id, Fk_Organization_Parent_Version)
+	WITH RECURSIVE RecursiveCTE (PK_Organization_Id, PK_Organization_Version, Fk_Organization_Parent_Id, Fk_Organization_Parent_Version, FK_Record_State_Type_Id)
 				AS
 				(
-					SELECT e.PK_Organization_Id, e.PK_Organization_Version, e.Fk_Organization_Parent_Id, e.Fk_Organization_Parent_Version
+					SELECT e.PK_Organization_Id, e.PK_Organization_Version, e.Fk_Organization_Parent_Id, e.Fk_Organization_Parent_Version, e.FK_Record_State_Type_Id
 					FROM organizations AS e
 					WHERE e.PK_Organization_Id = pOrganization_Id AND e.PK_Organization_Version = pOrganization_Version AND 
-							e.FK_Record_State_Type_Id <= vPublished_State
+							(e.FK_Record_State_Type_Id <= vPublished_State OR e.FK_Record_State_Type_Id = vExtincted_State)
 
 					UNION ALL
 
-					SELECT e.PK_Organization_Id, e.PK_Organization_Version, e.Fk_Organization_Parent_Id, e.Fk_Organization_Parent_Version
+					SELECT e.PK_Organization_Id, e.PK_Organization_Version, e.Fk_Organization_Parent_Id, e.Fk_Organization_Parent_Version, e.FK_Record_State_Type_Id
 					FROM organizations AS e
                 
 					INNER JOIN RecursiveCTE AS cte ON cte.PK_Organization_Id = e.Fk_Organization_Parent_Id AND cte.PK_Organization_Version = e.FK_Organization_Parent_Version
-					WHERE e.FK_Record_State_Type_Id <= vPublished_State
+					WHERE (e.FK_Record_State_Type_Id <= vPublished_State OR e.FK_Record_State_Type_Id = vExtincted_State)
 				)
 	SELECT * FROM RecursiveCTE
     ORDER BY PK_Organization_Id;

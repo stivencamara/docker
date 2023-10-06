@@ -1419,3 +1419,15 @@ CREATE TABLE Check_List_Texts (
     Default_Answer        MEDIUMTEXT NOT NULL,
     CONSTRAINT PK_Check_List_Texts PRIMARY KEY CLUSTERED (PK_Check_List_Text_Id ASC)
 );
+
+CREATE TABLE Import_Status (
+      PK_Import_Status_Id   NVARCHAR(36) NOT NULL,
+      FK_User_Id            INT NOT NULL,
+      Created_Date          DATETIME NOT NULL,
+      Status                SMALLINT(3) NOT NULL DEFAULT 0,
+      Total_Objects         INT NOT NULL DEFAULT 0,
+      Errors                MEDIUMTEXT NULL,
+      Filename_Initial      NVARCHAR(128) NULL,
+      Filename_Final        NVARCHAR(128) NULL,
+      CONSTRAINT PK_Check_List_Texts PRIMARY KEY CLUSTERED (PK_Import_Status_Id ASC)
+  );
