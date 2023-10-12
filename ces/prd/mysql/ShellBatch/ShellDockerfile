@@ -2,14 +2,13 @@ FROM oraclelinux:8
 
 ARG KEY=https://repo.mysql.com/RPM-GPG-KEY-mysql
 ARG REPO=https://repo.mysql.com
-
 ARG MYSQL_SHELL_PACKAGE_URL=$REPO/yum/mysql-tools-innovation-community/el/8/x86_64/mysql-shell-8.1.0-1.el8.x86_64.rpm
                                  
-
 RUN rpmkeys --import $KEY 
 RUN yum install -y $MYSQL_SHELL_PACKAGE_URL 
 #RUN yum clean all
-COPY ./run.sh /run.sh
+COPY run.sh /run.sh
+RUN chmod +x run.sh
 RUN sed -i -e 's/\r$//' run.sh
 ENTRYPOINT ["/run.sh"]
 #ENTRYPOINT ["/bin/sh"]
