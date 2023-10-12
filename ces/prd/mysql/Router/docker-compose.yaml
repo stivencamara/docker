@@ -1,30 +1,28 @@
 version: '3.9'
-name: mysql-router
+name: mysql
 x-common-extra-hosts: &common-extra-hosts
   extra_hosts:
-    - "qualidade-mysql-01-ces.azores.gov.pt:192.168.1.101"
-    - "qualidade-mysql-02-ces.azores.gov.pt:192.168.1.102"
-    - "qualidade-mysql-03-ces.azores.gov.pt:192.168.1.103"
+    - "db01-ces.azores.gov.pt:192.168.1.101"
+    - "db02-ces.azores.gov.pt:192.168.1.102"
+    - "db03-ces.azores.gov.pt:192.168.1.103" 
 services:
   mysql-router:
     env_file:
       - ./conf/Router.env
     networks:
-        babel-network:
-            ipv4_address: 192.168.1.100
+        ces:
+          ipv4_address: 192.168.1.100
     <<: *common-extra-hosts
     build: 
         context: .
         dockerfile: RouterDockerfile
+    image: mysql-router
     ports:
       - "3306:6446"
     restart: on-failure
 
 networks:
-  babel-network:
-    name: babel-network
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 192.168.1.0/24
+  ces:
+    name: ces
+    external: true
+    driver: overlay

@@ -1,7 +1,7 @@
 ﻿
 var dbPass = "P@ssw0rd"
 var clusterName = "cesCluster"
-var nodes = ["qualidade-mysql-02-ces.azores.gov.pt", "qualidade-mysql-03-ces.azores.gov.pt"]
+var nodes = ["db02-ces.azores.gov.pt", "db03-ces.azores.gov.pt"]
 
 try {
 
@@ -11,11 +11,11 @@ try {
     try {
         print("Checkin instances configurations...\n");
         print("server 1: \n");
-        print(dba.checkInstanceConfiguration('root@qualidade-mysql-01-ces.azores.gov.pt:3306', { password: dbPass }));
+        print(dba.checkInstanceConfiguration('root@db01-ces.azores.gov.pt:3306', { password: dbPass }));
         print("server 2: \n");
-        print(dba.checkInstanceConfiguration('root@qualidade-mysql-02-ces.azores.gov.pt:3306', { password: dbPass }));
+        print(dba.checkInstanceConfiguration('root@db02-ces.azores.gov.pt:3306', { password: dbPass }));
         print("server 3: \n");
-        print(dba.checkInstanceConfiguration('root@qualidade-mysql-03-ces.azores.gov.pt:3306', { password: dbPass }));
+        print(dba.checkInstanceConfiguration('root@db03-ces.azores.gov.pt:3306', { password: dbPass }));
     } catch (e) {
         print('\nError checking instances configurations...Error: ' + e.message + '\n');
     }
