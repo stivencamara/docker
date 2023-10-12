@@ -11,12 +11,12 @@ services:
     env_file:
       - ./conf/Router.env
     networks:
-        ces:
-          ipv4_address: 192.168.1.100
+      ces:
+        ipv4_address: 192.168.1.100
     <<: *common-extra-hosts
     build: 
-        context: .
-        dockerfile: RouterDockerfile
+      context: .
+      dockerfile: RouterDockerfile
     image: mysql-router
     ports:
       - "3306:6446"

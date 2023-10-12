@@ -12,16 +12,15 @@ services:
     env_file:
       - ./config/mysql-shell.env
     networks:
-        ces:
-            ipv4_address: 192.168.1.199
+      ces:
+        ipv4_address: 192.168.1.199
     <<: *common-extra-hosts
     build: 
-        context: .
-        dockerfile: ShellDockerfile
+      context: .
+      dockerfile: ShellDockerfile
     image: mysql-shell
     volumes:
-        - ./config/scripts/:/scripts/
-
+      - ./config/scripts/:/scripts/
 
 networks:
   ces:
