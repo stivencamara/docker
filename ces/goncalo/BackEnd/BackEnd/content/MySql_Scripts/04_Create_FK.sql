@@ -154,6 +154,9 @@ ALTER TABLE Organization_Related
     ADD CONSTRAINT FK_Organization_Related_Organizations FOREIGN KEY (FK_Organization_Id, FK_Organization_Version) REFERENCES Organizations (PK_Organization_Id, PK_Organization_Version);
 
 ALTER TABLE Organization_Related
+    ADD CONSTRAINT FK_Organization_Related_Organizations_Related FOREIGN KEY (FK_Organization_Related_Id, FK_Organization_Related_Version) REFERENCES Organizations (PK_Organization_Id, PK_Organization_Version);
+
+ALTER TABLE Organization_Related
     ADD CONSTRAINT FK_Organization_Related_Organization_Related_Types FOREIGN KEY (FK_Organization_Related_Type_Id) REFERENCES Organization_Related_Types (PK_Organization_Related_Type_Id);
 
 ALTER TABLE Organization_External_System
@@ -527,3 +530,6 @@ ALTER TABLE Document_Refusal
 
 ALTER TABLE Check_List_Texts
     ADD CONSTRAINT FK_Check_List_Texts_Check_Lists FOREIGN KEY (FK_Check_List_Id) REFERENCES Check_Lists (PK_Check_List_Id);
+
+ALTER TABLE Import_Status
+    ADD CONSTRAINT FK_Import_Status_Users FOREIGN KEY (FK_User_Id) REFERENCES Users (PK_User_Id);

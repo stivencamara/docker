@@ -77,6 +77,7 @@ CREATE TABLE Documents (
     Generic_1                      MEDIUMTEXT NULL,
     Generic_2                      MEDIUMTEXT NULL,
     Generic_3                      MEDIUMTEXT NULL,
+    Import_Id                      INT            NULL,
     CONSTRAINT PK_Documents PRIMARY KEY CLUSTERED (PK_Document_Id ASC, PK_Document_Version ASC)
 );
 
@@ -380,6 +381,7 @@ CREATE TABLE Points_Of_Care (
     Generic_1                      MEDIUMTEXT NULL,
     Generic_2                      MEDIUMTEXT NULL,
     Generic_3                      MEDIUMTEXT NULL,
+    Import_Id                      INT            NULL,
     CONSTRAINT PK_Points_Of_Care PRIMARY KEY CLUSTERED (PK_Point_Of_Care_Id ASC, PK_Point_Of_Care_Version ASC)
 );
 
@@ -473,6 +475,7 @@ CREATE TABLE Organizations (
     Generic_1                      MEDIUMTEXT NULL,
     Generic_2                      MEDIUMTEXT NULL,
     Generic_3                      MEDIUMTEXT NULL,
+    Import_Id                      INT            NULL,
     CONSTRAINT PK_Organizations PRIMARY KEY CLUSTERED (PK_Organization_Id ASC, PK_Organization_Version ASC)
 );
 
@@ -529,6 +532,8 @@ CREATE TABLE Organization_Related (
     PK_Organization_Related_Id      INT AUTO_INCREMENT NOT NULL,
     FK_Organization_Id              INT NOT NULL,
     FK_Organization_Version         INT NOT NULL,
+    FK_Organization_Related_Id      INT NOT NULL,
+    FK_Organization_Related_Version INT NOT NULL,
     FK_Organization_Related_Type_Id INT NOT NULL,
     CONSTRAINT PK_Organization_Related PRIMARY KEY CLUSTERED (PK_Organization_Related_Id ASC)
 );
@@ -605,6 +610,7 @@ CREATE TABLE Locations (
     Generic_1                      MEDIUMTEXT NULL,
     Generic_2                      MEDIUMTEXT NULL,
     Generic_3                      MEDIUMTEXT NULL,
+    Import_Id                      INT            NULL,
     CONSTRAINT PK_Locations PRIMARY KEY CLUSTERED (PK_Location_Id ASC, PK_Location_Version ASC)
 );
 
@@ -753,6 +759,7 @@ CREATE TABLE Services (
     Generic_2                      MEDIUMTEXT NULL,
     Generic_3                      MEDIUMTEXT NULL,
     Service_Internal               BIT            NULL,
+    Import_Id                      INT            NULL,
     CONSTRAINT PK_Services PRIMARY KEY CLUSTERED (PK_Service_Id ASC, PK_Service_Version ASC)
 );
 
@@ -1419,3 +1426,15 @@ CREATE TABLE Check_List_Texts (
     Default_Answer        MEDIUMTEXT NOT NULL,
     CONSTRAINT PK_Check_List_Texts PRIMARY KEY CLUSTERED (PK_Check_List_Text_Id ASC)
 );
+
+CREATE TABLE Import_Status (
+      PK_Import_Status_Id   NVARCHAR(36) NOT NULL,
+      FK_User_Id            INT NOT NULL,
+      Created_Date          DATETIME NOT NULL,
+      Status                SMALLINT(3) NOT NULL DEFAULT 0,
+      Total_Objects         INT NOT NULL DEFAULT 0,
+      Errors                MEDIUMTEXT NULL,
+      Filename_Initial      NVARCHAR(128) NULL,
+      Filename_Final        NVARCHAR(128) NULL,
+      CONSTRAINT PK_Check_List_Texts PRIMARY KEY CLUSTERED (PK_Import_Status_Id ASC)
+  );
