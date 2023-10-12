@@ -1,0 +1,32 @@
+version: '3.9'
+name: mysql-shell-batch
+x-common-extra-hosts: &common-extra-hosts
+  extra_hosts:
+    - "qualidade-mysql-01-ces.azores.gov.pt:192.168.1.101"
+    - "qualidade-mysql-02-ces.azores.gov.pt:192.168.1.102"
+    - "qualidade-mysql-03-ces.azores.gov.pt:192.168.1.103"
+    
+services:
+  mysql-shell:
+    tty: true
+    env_file:
+      - ./config/mysql-shell.env
+    networks:
+        babel-network:
+            ipv4_address: 192.168.1.199
+    <<: *common-extra-hosts
+    build: 
+        context: .
+        dockerfile: ShellDockerfile
+    volumes:
+        - ./config/scripts/:/scripts/
+
+
+networks:
+  babel-network:
+    name: babel-network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.1.0/24

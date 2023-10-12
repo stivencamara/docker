@@ -1,0 +1,32 @@
+FROM mysql:8.1
+#COPY ./setup.sql /docker-entrypoint-initdb.d
+COPY ./MySql/conf/my.cnf /etc/mysql/my.cnf
+
+#certificados (preparaçao directorias)
+RUN mkdir /etc/mysql/certs
+RUN mkdir /etc/mysql/logs
+RUN mkdir /etc/mysql/certs/qualidade-mysql-02-ces.azores.gov.pt
+RUN mkdir /etc/mysql/certs/qualidade-mysql-02-ces.azores.gov.pt/certs
+
+
+#copiar a CA
+COPY ./MySql/conf/certs/qualidade-mysql-02-ces.azores.gov.pt/CA/ca-certificate.pem /etc/mysql/certs/ca/ca-certificate.pem
+COPY ./MySql/conf/certs/qualidade-mysql-02-ces.azores.gov.pt/CA/ca-private-key.pem /etc/mysql/certs/ca/ca-private-key.pem
+
+#copiar a configuraçao para a geraçao de certificados
+COPY ./MySql/conf/certs/qualidade-mysql-02-ces.azores.gov.pt/config_certs/certificate.conf /etc/mysql/certs/config_certs/certificate.conf
+COPY ./MySql/conf/certs/qualidade-mysql-02-ces.azores.gov.pt/config_certs/certificate-ext.conf /etc/mysql/certs/config_certs/certificate-ext.conf
+
+#generating certificate signed with copied CA
+RUN openssl genrsa -out /etc/mysql/certs/qualidade-mysql-02-ces.azores.gov.pt/certs/mysql-02.key 2048 
+RUN openssl req -new -key /etc/mysql/certs/qualidade-mysql-02-ces.azores.gov.pt/certs/mysql-02.key -out /etc/mysql/certs/qualidade-mysql-02-ces.azores.gov.pt/certs/mysql-02.csr -config /etc/mysql/certs/config_certs/certificate.conf 
+RUN openssl x509 -req -in /etc/mysql/certs/qualidade-mysql-02-ces.azores.gov.pt/certs/mysql-02.csr -CA /etc/mysql/certs/ca/ca-certificate.pem -CAkey /etc/mysql/certs/ca/ca-private-key.pem -passin pass:123QWEasdZXC -CAcreateserial -out /etc/mysql/certs/qualidade-mysql-02-ces.azores.gov.pt/certs/mysql-02.crt -extfile /etc/mysql/certs/config_certs/certificate-ext.conf -days 365
+
+
+
+RUN chown mysql:mysql /etc/mysql/my.cnf
+RUN chmod 600 /etc/mysql/my.cnf
+
+RUN chown -R mysql:mysql /etc/mysql
+
+EXPOSE 3302

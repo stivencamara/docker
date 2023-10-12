@@ -1,0 +1,32 @@
+version: '3.9'
+name: mysql-server2
+x-common-extra-hosts: &common-extra-hosts
+  extra_hosts:
+    - "qualidade-mysql-01-ces.azores.gov.pt:192.168.1.101"
+    - "qualidade-mysql-02-ces.azores.gov.pt:192.168.1.102"
+    - "qualidade-mysql-03-ces.azores.gov.pt:192.168.1.103"
+services:
+  mysql-server-2:
+    env_file:
+      - ./MySql/MySql.env
+    networks:
+        babel-network:
+            ipv4_address: 192.168.1.102
+    <<: *common-extra-hosts
+    build: 
+        context: .
+        dockerfile: MySqlDockerfile
+    ports:
+      - "3302:3306"
+    restart: always
+    volumes:
+      - ./MySql/conf/mysql.cnf:/etc/mysql/conf.d
+
+networks:
+  babel-network:
+    name: babel-network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.1.0/24
