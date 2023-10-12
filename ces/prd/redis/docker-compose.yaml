@@ -1,0 +1,30 @@
+version: "3.9"
+name: redis
+x-common-extra-hosts: &common-extra-hosts
+  extra_hosts:
+    - "redis01-ces.azores.gov.pt:192.168.1.20"    
+services:
+  redis:
+    env_file:
+      - ./Redis/Redis.env
+    networks:
+      ces:
+        ipv4_address: 192.168.1.20
+    container_name: redis
+    build:
+      context: .
+      dockerfile: ./Redis/RedisDockerfile
+    ports:
+      - 6379:6379
+    <<: *common-extra-hosts
+    volumes:
+      - redis_data:/usr/local/etc/redis
+    mem_limit: ${MEM_LIMIT}
+  
+volumes:
+  redis_data:
+   
+networks:
+  ces:
+    name: ces
+    driver: external

@@ -1,0 +1,1 @@
+docker compose --env-file Redis/Redis.env -f docker-compose.yaml up -d
