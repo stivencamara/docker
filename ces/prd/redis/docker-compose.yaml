@@ -10,7 +10,7 @@ services:
     networks:
       ces:
         ipv4_address: 192.168.1.20
-    container_name: redis
+    container_name: "redis01-ces.azores.gov.pt"
     build:
       context: .
       dockerfile: ./Redis/RedisDockerfile
@@ -19,7 +19,8 @@ services:
     <<: *common-extra-hosts
     volumes:
       - redis_data:/usr/local/etc/redis
-    mem_limit: ${MEM_LIMIT}
+    #Memory limite 14.8GB
+    mem_limit: 14884901888
   
 volumes:
   redis_data:
@@ -27,4 +28,5 @@ volumes:
 networks:
   ces:
     name: ces
-    driver: external
+    external: true
+    driver: overlay
