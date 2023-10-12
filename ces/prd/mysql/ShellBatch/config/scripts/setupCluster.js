@@ -1,5 +1,5 @@
 ﻿
-var dbPass = "P@ssw0rd"
+var dbPass = "tj17txxk3FUC"
 var clusterName = "cesCluster"
 var nodes = ["db02-ces.azores.gov.pt", "db03-ces.azores.gov.pt"]
 
