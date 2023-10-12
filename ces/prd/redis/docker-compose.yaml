@@ -1,5 +1,5 @@
 version: "3.9"
-name: redis
+name: "redis"
 x-common-extra-hosts: &common-extra-hosts
   extra_hosts:
     - "redis01-ces.azores.gov.pt:192.168.1.20"    
@@ -14,6 +14,7 @@ services:
     build:
       context: .
       dockerfile: ./Redis/RedisDockerfile
+    image: redis
     ports:
       - 6379:6379
     <<: *common-extra-hosts
