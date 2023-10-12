@@ -9,7 +9,7 @@ ARG MYSQL_SHELL_PACKAGE_URL=$REPO/yum/mysql-tools-innovation-community/el/8/x86_
 RUN rpmkeys --import $KEY 
 RUN yum install -y $MYSQL_SHELL_PACKAGE_URL 
 #RUN yum clean all
-COPY run.sh /run.sh
+COPY ./run.sh /run.sh
 RUN sed -i -e 's/\r$//' run.sh
 ENTRYPOINT ["/run.sh"]
 #ENTRYPOINT ["/bin/sh"]
