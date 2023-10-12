@@ -6,7 +6,7 @@ var nodes = ["db02-ces.azores.gov.pt", "db03-ces.azores.gov.pt"]
 try {
 
     print('Setting up InnoDB cluster V2...\n');
-    shell.connect('root@mysql-server-1:3306', dbPass)
+    shell.connect('root@db01-ces.azores.gov.pt:3306', dbPass)
 
     try {
         print("Checkin instances configurations...\n");
