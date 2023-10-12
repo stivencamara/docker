@@ -154,6 +154,9 @@ ALTER TABLE Organization_Related
     ADD CONSTRAINT FK_Organization_Related_Organizations FOREIGN KEY (FK_Organization_Id, FK_Organization_Version) REFERENCES Organizations (PK_Organization_Id, PK_Organization_Version);
 
 ALTER TABLE Organization_Related
+    ADD CONSTRAINT FK_Organization_Related_Organizations_Related FOREIGN KEY (FK_Organization_Related_Id, FK_Organization_Related_Version) REFERENCES Organizations (PK_Organization_Id, PK_Organization_Version);
+
+ALTER TABLE Organization_Related
     ADD CONSTRAINT FK_Organization_Related_Organization_Related_Types FOREIGN KEY (FK_Organization_Related_Type_Id) REFERENCES Organization_Related_Types (PK_Organization_Related_Type_Id);
 
 ALTER TABLE Organization_External_System
