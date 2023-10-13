@@ -1,0 +1,39 @@
+version: "3.9"
+name: elasticsearch-es01
+x-common-extra-hosts: &common-extra-hosts
+  extra_hosts:
+    - "es01-ces.azores.gov.pt:192.168.1.30"
+    - "es02-ces.azores.gov.pt:192.168.1.31"
+    
+services:
+  es01:
+    container_name: es01-ces.azores.gov.pt
+    env_file:
+      - ./ElasticSearch/es01/ElasticSearchEnvironment.env
+    hostname: es01-ces.azores.gov.pt
+    build:
+      context: .
+      dockerfile: ./ElasticSearch/es01/ElasticSearchDockerfile
+    image: elasticsearch-es01
+    networks:
+      ces:
+        ipv4_address: 192.168.1.30
+    ports:
+      - 9200:9200
+      - 9300:9300
+    <<: *common-extra-hosts
+    mem_limit: ${MEM_LIMIT}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es01_data:/usr/share/elasticsearch/data
+volumes:
+  es01_data:
+
+networks:
+  ces:
+    name: ces
+    external: true
+    driver: overlay

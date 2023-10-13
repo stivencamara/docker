@@ -1,0 +1,53 @@
+#setting passwords
+#RUN /usr/share/elasticsearch/bin/elasticsearch-setup-passwords auto --batch --url https://qualidade-es01-ces.azores.gov.pt:9200
+
+#caminho da imagem que queremos
+FROM docker.elastic.co/elasticsearch/elasticsearch:8.6.2
+
+#alteraçao de user para root
+USER root
+
+#para alterar a password do root
+RUN echo "root:toor" | chpasswd
+
+#para definir a directoria de trabalho
+WORKDIR /ElasticSearch
+
+RUN apt-get update && apt-get install -y \
+    sudo \
+    net-tools \
+    iputils-ping \
+ && rm -rf /var/lib/apt/lists/* \
+ && sudo sysctl -w vm.max_map_count=262144 \
+ $$ sudo sysctl --system
+
+
+RUN echo "------------------------Setting memory limits------------------------"
+RUN echo vm.max_map_count=262144  >> /etc/sysctl.conf
+RUN sysctl -w vm.max_map_count=262144
+
+#copy configuration
+COPY ./ElasticSearch/es01/config/elasticsearch.yml /usr/share/elasticsearch/config/elasticsearch.yml
+
+#copy CA
+COPY ./ElasticSearch/es01/certs/qualidade-es01-ces.azores.gov.pt/CA/ca-certificate.pem /usr/share/elasticsearch/config/certs/qualidade-es01-ces.azores.gov.pt/CA/ca-certificate.pem
+COPY ./ElasticSearch/es01/certs/qualidade-es01-ces.azores.gov.pt/CA/ca-private-key.pem /usr/share/elasticsearch/config/certs/qualidade-es01-ces.azores.gov.pt/CA/ca-private-key.pem
+
+#copy Certificate Configuration Files
+COPY ./ElasticSearch/es01/certs/qualidade-es01-ces.azores.gov.pt/certs/certificate.conf /usr/share/elasticsearch/config/certs/qualidade-es01-ces.azores.gov.pt/certs/certificate.conf
+COPY ./ElasticSearch/es01/certs/qualidade-es01-ces.azores.gov.pt/certs/certificate-ext.conf /usr/share/elasticsearch/config/certs/qualidade-es01-ces.azores.gov.pt/certs/certificate-ext.conf
+
+#generating certificate signed with copied CA
+RUN openssl genrsa -out /usr/share/elasticsearch/config/certs/qualidade-es01-ces.azores.gov.pt/certs/es01.key 2048 \
+&& openssl req -new -key /usr/share/elasticsearch/config/certs/qualidade-es01-ces.azores.gov.pt/certs/es01.key -out /usr/share/elasticsearch/config/certs/qualidade-es01-ces.azores.gov.pt/certs/es01.csr -config /usr/share/elasticsearch/config/certs/qualidade-es01-ces.azores.gov.pt/certs/certificate.conf \
+&& openssl x509 -req -in /usr/share/elasticsearch/config/certs/qualidade-es01-ces.azores.gov.pt/certs/es01.csr -CA /usr/share/elasticsearch/config/certs/qualidade-es01-ces.azores.gov.pt/CA/ca-certificate.pem -CAkey /usr/share/elasticsearch/config/certs/qualidade-es01-ces.azores.gov.pt/CA/ca-private-key.pem -passin pass:123QWEasdZXC -CAcreateserial -out /usr/share/elasticsearch/config/certs/qualidade-es01-ces.azores.gov.pt/certs/es01.crt -extfile /usr/share/elasticsearch/config/certs/qualidade-es01-ces.azores.gov.pt/certs/certificate-ext.conf -days 365
+
+RUN /usr/share/elasticsearch/bin/elasticsearch-keystore create
+
+RUN echo "------------------------Setting file permissions----------------------- " \
+ && chown -R elasticsearch /usr/share/elasticsearch/ \
+ && chown -R elasticsearch /usr/share/elasticsearch/config \
+ && chown -R elasticsearch /usr/share/elasticsearch/data \
+ && chown -R elasticsearch /usr/share/elasticsearch/config/certs
+
+USER elasticsearch
