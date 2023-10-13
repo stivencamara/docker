@@ -10,8 +10,8 @@ try {
 
     try {
         print("Checkin server 1 instance...\n");
-        print("server 1: \n");
         print(dba.checkInstanceConfiguration('root@db01-ces.azores.gov.pt:3306', { password: dbPass }));
+        print("Server 1 checked: \n");
     } catch (e) {
         print('\nError checking instance of the server 1...Error: ' + e.message + '\n');
     }
@@ -19,6 +19,7 @@ try {
     try {
         print("Checkin server 2 instance...\n");
         print(dba.checkInstanceConfiguration('root@db02-ces.azores.gov.pt:3306', { password: dbPass }));
+        print("Server 2 checked: \n");
     } catch (e) {
         print('\nError checking instance of the server 2...Error: ' + e.message + '\n');
     }
@@ -26,6 +27,7 @@ try {
     try {
         print("Checkin server 3 instance...\n");
         print(dba.checkInstanceConfiguration('root@db03-ces.azores.gov.pt:3306', { password: dbPass }));
+        print("Server 3 checked: \n");
     } catch (e) {
         print('\nError checking instance of the server 3...Error: ' + e.message + '\n');
     }
