@@ -23,11 +23,15 @@ if [ "$1" = 'mysqlsh' ]; then
 	    fi
     done
     if [ "$MYSQLSH_SCRIPT" ]; then
-	mysqlsh "$MYSQL_USER@$MYSQL_HOST:$MYSQL_PORT" --password="$MYSQL_PASSWORD" -f "$MYSQLSH_SCRIPT" || true
+		echo "User: $MYSQL_USER@$MYSQL_HOST:$MYSQL_PORT"
+		echo "Password: $MYSQL_PASSWORD"
+		echo "Script: $MYSQLSH_SCRIPT"
+		echo "CONNECTING TO EXECUTE SETUP CLUSTER SCRIPT!"
+		mysqlsh "$MYSQL_USER@$MYSQL_HOST:$MYSQL_PORT" --password="$MYSQL_PASSWORD" -f "$MYSQLSH_SCRIPT" || true
     fi
     if [ "$MYSQL_SCRIPT" ]; then
-	 echo "CONNECTING TO EXECUTE DATABASE SCRIPT!"
-	mysqlsh --sql "$MYSQL_USER@$MYSQL_HOST:$MYSQL_PORT" --password="$MYSQL_PASSWORD" --sql -f "$MYSQL_SCRIPT" || true
+	 	echo "CONNECTING TO EXECUTE DATABASE SCRIPT!"
+		mysqlsh --sql "$MYSQL_USER@$MYSQL_HOST:$MYSQL_PORT" --password="$MYSQL_PASSWORD" --sql -f "$MYSQL_SCRIPT" || true
     fi
     exit 0
 fi
