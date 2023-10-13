@@ -9,15 +9,25 @@ try {
     shell.connect('root@db01-ces.azores.gov.pt:3306', dbPass)
 
     try {
-        print("Checkin instances configurations...\n");
+        print("Checkin server 1 instance...\n");
         print("server 1: \n");
-        print(dba.checkInstanceConfiguration('root@db01-ces.azores.gov.pt:3301', { password: dbPass }));
-        print("server 2: \n");
-        print(dba.checkInstanceConfiguration('root@db02-ces.azores.gov.pt:3302', { password: dbPass }));
-        print("server 3: \n");
-        print(dba.checkInstanceConfiguration('root@db03-ces.azores.gov.pt:3303', { password: dbPass }));
+        print(dba.checkInstanceConfiguration('root@db01-ces.azores.gov.pt:3306', { password: dbPass }));
     } catch (e) {
-        print('\nError checking instances configurations...Error: ' + e.message + '\n');
+        print('\nError checking instance of the server 1...Error: ' + e.message + '\n');
+    }
+
+    try {
+        print("Checkin server 2 instance...\n");
+        print(dba.checkInstanceConfiguration('root@db02-ces.azores.gov.pt:3306', { password: dbPass }));
+    } catch (e) {
+        print('\nError checking instance of the server 2...Error: ' + e.message + '\n');
+    }
+
+    try {
+        print("Checkin server 3 instance...\n");
+        print(dba.checkInstanceConfiguration('root@db03-ces.azores.gov.pt:3306', { password: dbPass }));
+    } catch (e) {
+        print('\nError checking instance of the server 3...Error: ' + e.message + '\n');
     }
 
    
