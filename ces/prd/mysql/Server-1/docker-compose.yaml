@@ -1,5 +1,5 @@
 version: "3.9"
-name: mysql
+name: mysql-server-1
 x-common-extra-hosts: &common-extra-hosts
   extra_hosts:
     - "db01-ces.azores.gov.pt:192.168.1.101"
@@ -11,13 +11,13 @@ services:
     env_file:
       - ./MySql/MySql.env
     networks:
-        ces:
-            ipv4_address: 192.168.1.101
+      ces:
+        ipv4_address: 192.168.1.101
     <<: *common-extra-hosts
     build: 
         context: .
         dockerfile: MySqlDockerfile
-    image: mysql
+    image: mysql-server-1
     ports:
       - "3301:3306"
     restart: always

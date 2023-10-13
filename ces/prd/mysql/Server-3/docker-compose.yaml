@@ -1,5 +1,5 @@
 version: '3.9'
-name: mysql
+name: mysql-server-3
 x-common-extra-hosts: &common-extra-hosts
   extra_hosts:
     - "db01-ces.azores.gov.pt:192.168.1.101"
@@ -17,7 +17,7 @@ services:
     build: 
         context: .
         dockerfile: MySqlDockerfile
-    image: mysql
+    image: mysql-server-3
     ports:
       - "3303:3306"
     restart: always
