@@ -23,11 +23,11 @@ if [ "$1" = 'mysqlsh' ]; then
 	    fi
     done
     if [ "$MYSQLSH_SCRIPT" ]; then
-	mysqlsh "$MYSQL_USER@$MYSQL_HOST:$MYSQL_PORT" --dbpassword="$MYSQL_PASSWORD" -f "$MYSQLSH_SCRIPT" || true
+	mysqlsh "$MYSQL_USER@$MYSQL_HOST:$MYSQL_PORT" --password="$MYSQL_PASSWORD" -f "$MYSQLSH_SCRIPT" || true
     fi
     if [ "$MYSQL_SCRIPT" ]; then
 	 echo "CONNECTING TO EXECUTE DATABASE SCRIPT!"
-	mysqlsh --sql "$MYSQL_USER@$MYSQL_HOST:$MYSQL_PORT" --dbpassword="$MYSQL_PASSWORD" --sql -f "$MYSQL_SCRIPT" || true
+	mysqlsh --sql "$MYSQL_USER@$MYSQL_HOST:$MYSQL_PORT" --password="$MYSQL_PASSWORD" --sql -f "$MYSQL_SCRIPT" || true
     fi
     exit 0
 fi
