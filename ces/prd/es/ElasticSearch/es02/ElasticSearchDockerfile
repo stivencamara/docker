@@ -1,5 +1,5 @@
 #setting passwords
-#RUN /usr/share/elasticsearch/bin/elasticsearch-setup-passwords auto --batch --url https://qualidade-es01-ces.azores.gov.pt:9200
+#RUN /usr/share/elasticsearch/bin/elasticsearch-setup-passwords auto --batch --url https://es01-ces.azores.gov.pt:9200
 
 #caminho da imagem que queremos
 FROM docker.elastic.co/elasticsearch/elasticsearch:8.6.2
@@ -30,17 +30,17 @@ RUN sysctl -w vm.max_map_count=262144
 COPY ./ElasticSearch/es02/config/elasticsearch.yml /usr/share/elasticsearch/config/elasticsearch.yml
 
 #copy CA
-COPY ./ElasticSearch/es02/certs/qualidade-es02-ces.azores.gov.pt/CA/ca-certificate.pem /usr/share/elasticsearch/config/certs/qualidade-es02-ces.azores.gov.pt/CA/ca-certificate.pem
-COPY ./ElasticSearch/es02/certs/qualidade-es02-ces.azores.gov.pt/CA/ca-private-key.pem /usr/share/elasticsearch/config/certs/qualidade-es02-ces.azores.gov.pt/CA/ca-private-key.pem
+COPY ./ElasticSearch/es02/certs/es02-ces.azores.gov.pt/CA/ca-certificate.pem /usr/share/elasticsearch/config/certs/es02-ces.azores.gov.pt/CA/ca-certificate.pem
+COPY ./ElasticSearch/es02/certs/es02-ces.azores.gov.pt/CA/ca-private-key.pem /usr/share/elasticsearch/config/certs/es02-ces.azores.gov.pt/CA/ca-private-key.pem
 
 #copy Certificate Configuration Files
-COPY ./ElasticSearch/es02/certs/qualidade-es02-ces.azores.gov.pt/certs/certificate.conf /usr/share/elasticsearch/config/certs/qualidade-es02-ces.azores.gov.pt/certs/certificate.conf
-COPY ./ElasticSearch/es02/certs/qualidade-es02-ces.azores.gov.pt/certs/certificate-ext.conf /usr/share/elasticsearch/config/certs/qualidade-es02-ces.azores.gov.pt/certs/certificate-ext.conf
+COPY ./ElasticSearch/es02/certs/es02-ces.azores.gov.pt/certs/certificate.conf /usr/share/elasticsearch/config/certs/es02-ces.azores.gov.pt/certs/certificate.conf
+COPY ./ElasticSearch/es02/certs/es02-ces.azores.gov.pt/certs/certificate-ext.conf /usr/share/elasticsearch/config/certs/es02-ces.azores.gov.pt/certs/certificate-ext.conf
 
 #generating certificate signed with copied CA
-RUN openssl genrsa -out /usr/share/elasticsearch/config/certs/qualidade-es02-ces.azores.gov.pt/certs/es02.key 2048 \
-&& openssl req -new -key /usr/share/elasticsearch/config/certs/qualidade-es02-ces.azores.gov.pt/certs/es02.key -out /usr/share/elasticsearch/config/certs/qualidade-es02-ces.azores.gov.pt/certs/es02.csr -config /usr/share/elasticsearch/config/certs/qualidade-es02-ces.azores.gov.pt/certs/certificate.conf \
-&& openssl x509 -req -in /usr/share/elasticsearch/config/certs/qualidade-es02-ces.azores.gov.pt/certs/es02.csr -CA /usr/share/elasticsearch/config/certs/qualidade-es02-ces.azores.gov.pt/CA/ca-certificate.pem -CAkey /usr/share/elasticsearch/config/certs/qualidade-es02-ces.azores.gov.pt/CA/ca-private-key.pem -passin pass:123QWEasdZXC -CAcreateserial -out /usr/share/elasticsearch/config/certs/qualidade-es02-ces.azores.gov.pt/certs/es02.crt -extfile /usr/share/elasticsearch/config/certs/qualidade-es02-ces.azores.gov.pt/certs/certificate-ext.conf -days 365
+RUN openssl genrsa -out /usr/share/elasticsearch/config/certs/es02-ces.azores.gov.pt/certs/es02.key 2048 \
+&& openssl req -new -key /usr/share/elasticsearch/config/certs/es02-ces.azores.gov.pt/certs/es02.key -out /usr/share/elasticsearch/config/certs/es02-ces.azores.gov.pt/certs/es02.csr -config /usr/share/elasticsearch/config/certs/es02-ces.azores.gov.pt/certs/certificate.conf \
+&& openssl x509 -req -in /usr/share/elasticsearch/config/certs/es02-ces.azores.gov.pt/certs/es02.csr -CA /usr/share/elasticsearch/config/certs/es02-ces.azores.gov.pt/CA/ca-certificate.pem -CAkey /usr/share/elasticsearch/config/certs/es02-ces.azores.gov.pt/CA/ca-private-key.pem -passin pass:123QWEasdZXC -CAcreateserial -out /usr/share/elasticsearch/config/certs/es02-ces.azores.gov.pt/certs/es02.crt -extfile /usr/share/elasticsearch/config/certs/es02-ces.azores.gov.pt/certs/certificate-ext.conf -days 365
 
 RUN /usr/share/elasticsearch/bin/elasticsearch-keystore create
 
