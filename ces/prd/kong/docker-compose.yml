@@ -2,7 +2,7 @@ version: '3'
 x-common-extra-hosts: &common-extra-hosts
   extra_hosts:
     - "kongdatabase-ces.azores.gov.pt:192.168.1.150"
-    - "kong-ces.azores.gov.pt:192.168.1.151"
+    - "kong01-ces.azores.gov.pt:192.168.1.151"
     - "konga-ces.azores.gov.pt:192.168.1.152" 
 services:
 
@@ -89,8 +89,5 @@ volumes:
 networks:
   ces:
     name: ces
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 192.168.1.0/24
+    external: true
+    driver: overlay
