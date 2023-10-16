@@ -18,6 +18,8 @@ services:
     networks:
       ces:
         ipv4_address: 192.168.1.30
+    environment:
+      network.publish_host: es01-ces.azores.gov.pt
     ports:
       - 9200:9200
       - 9300:9300
