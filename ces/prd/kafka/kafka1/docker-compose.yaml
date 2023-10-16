@@ -1,0 +1,47 @@
+version: "3.9"
+name: kafka1
+x-common-extra-hosts: &common-extra-hosts
+  extra_hosts:
+    - "kafka1-ces.azores.gov.pt:192.168.1.50"
+    
+services:
+  zookeeper1:
+    container_name: zookeeper1
+    image: confluentinc/cp-zookeeper:7.4.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 2181:2181
+    networks:
+      ces:
+        ipv4_address: 192.168.1.50
+
+  kafka1:
+    container_name: kafka1-ces.azores.gov.pt
+    image: confluentinc/cp-kafka:7.4.0
+    depends_on:
+      - zookeeper1
+    ports:
+      - 19092:19092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:9092,PLAINTEXT_HOST://kafka1:19092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      ces:
+        ipv4_address: 192.168.1.51
+    volumes:
+      - kafka1_data:/var/lib/kafka/data
+
+volumes:
+  kafka1_data:
+   
+networks:
+  ces:
+    name: ces
+    external: true
+    driver: overlay

@@ -1,0 +1,103 @@
+version: '3'
+x-common-extra-hosts: &common-extra-hosts
+  extra_hosts:
+    - "qualidade-db-ces.azores.gov.pt:192.168.1.10"
+    - "qualidade-redis-ces.azores.gov.pt:192.168.1.20"
+    - "qualidade-es01-ces.azores.gov.pt:192.168.1.30"
+    - "qualidade-es02-ces.azores.gov.pt:192.168.1.31"
+    - "qualidade-kafka1-ces.azores.gov.pt:192.168.1.50"
+    - "qualidade-fe-ces.azores.gov.pt:192.168.1.80"
+    - "qualidade-api-ces.azores.gov.pt:192.168.1.90"
+    - "qualidade-kongdatabase-ces.azores.gov.pt:192.168.1.150"
+    - "qualidade-kong-ces.azores.gov.pt:192.168.1.151"
+    - "qualidade-konga-ces.azores.gov.pt:192.168.1.152" 
+services:
+
+  kong-database:
+    <<: *common-extra-hosts  
+    image: postgres:9.6
+    container_name: kong-database
+    ports:
+      - 5432:5432
+    networks:
+        babel-network:
+            ipv4_address: 192.168.1.150
+    environment:
+      - POSTGRES_USER=kong
+      - POSTGRES_DB=kong
+      - POSTGRES_PASSWORD=kong
+    volumes:
+      - "db-data-kong-postgres:/var/lib/postgresql/data"
+
+  kong-migrations:
+    <<: *common-extra-hosts  
+    image: kong
+    environment:
+      - KONG_DATABASE=postgres
+      - KONG_PG_HOST=qualidade-kongdatabase-ces.azores.gov.pt
+      - KONG_PG_PASSWORD=kong
+      - KONG_CASSANDRA_CONTACT_POINTS=kong-database
+    command: kong migrations bootstrap
+    restart: on-failure
+    depends_on:
+      - kong-database
+    networks:
+      babel-network:
+        ipv4_address: 192.168.1.153
+
+  kong:
+    <<: *common-extra-hosts  
+    image: kong
+    container_name: kong
+    environment:
+      - LC_CTYPE=en_US.UTF-8
+      - LC_ALL=en_US.UTF-8
+      - KONG_DATABASE=postgres
+      - KONG_PG_HOST=qualidade-kongdatabase-ces.azores.gov.pt
+      - KONG_PG_USER=kong
+      - KONG_PG_PASSWORD=kong
+      - KONG_CASSANDRA_CONTACT_POINTS=kong-database
+      - KONG_PROXY_ACCESS_LOG=/dev/stdout
+      - KONG_ADMIN_ACCESS_LOG=/dev/stdout
+      - KONG_PROXY_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_LISTEN=0.0.0.0:8001, 0.0.0.0:8444 ssl
+    restart: on-failure
+    ports:
+      - 8000:8000
+      - 8443:8443
+      - 8001:8001
+      - 8444:8444
+    links:
+      - kong-database:kong-database
+    depends_on:
+      - kong-migrations
+    networks:
+      babel-network:
+        ipv4_address: 192.168.1.151
+
+  konga:
+    <<: *common-extra-hosts  
+    image: pantsel/konga
+    ports:
+      - 444:1337
+    links:
+      - kong:kong
+    container_name: konga
+    environment:
+      - NODE_ENV=production
+    networks:
+        babel-network:
+            ipv4_address: 192.168.1.152
+
+volumes:
+  db-data-kong-postgres:
+
+networks:
+  babel-network:
+    name: babel-network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.1.0/24
