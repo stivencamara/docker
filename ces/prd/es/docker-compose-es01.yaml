@@ -16,13 +16,13 @@ services:
       dockerfile: ./ElasticSearch/es01/ElasticSearchDockerfile
     image: elasticsearch-es01
     networks:
-      ces:
+      piic_piic:
         ipv4_address: 192.168.1.30
     ports:
       - 9200:9200
       - 9300:9300
     <<: *common-extra-hosts
-    mem_limit: 60129542144
+    mem_limit: 14g
     ulimits:
       memlock:
         soft: -1
@@ -32,8 +32,17 @@ services:
 volumes:
   es01_data:
 
+# networks:
+#   ces:
+#     name: ces
+#     external: true
+#     driver: overlay
+
 networks:
-  ces:
-    name: ces
-    external: true
-    driver: overlay
+  piic_piic:
+    name: piic_piic
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.1.0/24

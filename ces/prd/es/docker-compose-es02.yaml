@@ -22,7 +22,7 @@ services:
       - 9201:9200
       - 9300:9300
     <<: *common-extra-hosts
-    mem_limit: 60129542144
+    mem_limit: 14g
     ulimits:
       memlock:
         soft: -1
