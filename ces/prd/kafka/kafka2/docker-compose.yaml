@@ -4,6 +4,7 @@ x-common-extra-hosts: &common-extra-hosts
   extra_hosts:
     - "kafka1-ces.azores.gov.pt:192.168.1.50"
 
+services:
   kafka2:
     container_name: kafka2-ces.azores.gov.pt
     image: confluentinc/cp-kafka:7.4.0
