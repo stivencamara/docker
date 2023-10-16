@@ -32,17 +32,8 @@ services:
 volumes:
   es01_data:
 
-# networks:
-#   ces:
-#     name: ces
-#     external: true
-#     driver: overlay
-
 networks:
-  piic_piic:
-    name: piic_piic
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 192.168.1.0/24
+  ces:
+    name: ces
+    external: true
+    driver: overlay

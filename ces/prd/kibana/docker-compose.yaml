@@ -1,0 +1,34 @@
+version: "3.9"
+name: elasticsearch-kibana
+x-common-extra-hosts: &common-extra-hosts
+  extra_hosts:
+    - "es01-ces.azores.gov.pt:192.168.1.30"
+    - "es02-ces.azores.gov.pt:192.168.1.31"
+    
+services:
+  kibana:
+    container_name: kibana
+    env_file:
+      - ./Kibana/Kibana.env
+    build:
+      context: .
+      dockerfile: ./Kibana/KibanaDockerfile
+    image: elasticsearch-kibana
+    networks:
+      ces:
+        ipv4_address: 192.168.1.40
+    ports:
+      - 5601:5601
+    <<: *common-extra-hosts
+    volumes:
+      - kibana_data:/usr/share/kibana/data
+    mem_limit: 2g
+ 
+volumes:
+ kibana_data:
+ 
+networks:
+  ces:
+    name: ces
+    external: true
+    driver: overlay
