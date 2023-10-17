@@ -14,9 +14,9 @@ services:
   backend:
     build:
       context: .
-      dockerfile: ./BackendDockerfile
+      dockerfile: BackendDockerfile
     env_file:
-      - ./BackendEnvironment.env
+      - BackendEnvironment.env
     ports:
       - 443:443
     <<: *common-extra-hosts  
