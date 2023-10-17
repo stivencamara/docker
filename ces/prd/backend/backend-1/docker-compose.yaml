@@ -22,7 +22,7 @@ services:
     <<: *common-extra-hosts  
     #mem_limit: ${MEM_LIMIT}
     volumes:
-      - backend_data:/api
+      - backend01_data:/api
     restart: always
     networks:
         ces:
@@ -31,7 +31,7 @@ services:
 
 
 volumes:
- backend_data:
+ backend01_data:
 
    
 networks:

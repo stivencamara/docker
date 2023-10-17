@@ -1,14 +1,14 @@
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /api
-COPY ./backend/content .
+COPY ./content .
 
 #copy CA
-COPY ./backend/certs/api01-ces.azores.gov.pt/CA/ca-certificate.pem /usr/local/share/ca-certificates/api01-ces.azores.gov.pt.ca-certificate.crt
-COPY ./backend/certs/api01-ces.azores.gov.pt/CA/ca-private-key.pem /usr/local/share/ca-certificates/api01-ces.azores.gov.pt.ca-private-key.pem
+COPY ./certs/api01-ces.azores.gov.pt/CA/ca-certificate.pem /usr/local/share/ca-certificates/api01-ces.azores.gov.pt.ca-certificate.crt
+COPY ./certs/api01-ces.azores.gov.pt/CA/ca-private-key.pem /usr/local/share/ca-certificates/api01-ces.azores.gov.pt.ca-private-key.pem
 
 #copy Certificate Configuration Files
-COPY ./backend/certs/api01-ces.azores.gov.pt/certs/certificate.conf /usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/certificate.conf
-COPY ./backend/certs/api01-ces.azores.gov.pt/certs/certificate-ext.conf /usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/certificate-ext.conf
+COPY ./certs/api01-ces.azores.gov.pt/certs/certificate.conf /usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/certificate.conf
+COPY ./certs/api01-ces.azores.gov.pt/certs/certificate-ext.conf /usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/certificate-ext.conf
 
 #generating certificate signed with copied CA
 RUN openssl genrsa -out /usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/api01.key 2048 \
