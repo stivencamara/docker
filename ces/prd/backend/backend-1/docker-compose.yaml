@@ -15,12 +15,10 @@ services:
     build:
       context: .
       dockerfile: BackendDockerfile
-    env_file:
-      - BackendEnvironment.env
     ports:
       - 443:443
     <<: *common-extra-hosts  
-    #mem_limit: ${MEM_LIMIT}
+    mem_limit: 14g
     volumes:
       - backend01_data:/api
     restart: always
