@@ -1,6 +1,6 @@
-CREATE USER IF NOT EXISTS 'sa'@'%' IDENTIFIED BY 'tj17txxk3FUC';
+CREATE USER IF NOT EXISTS 'CESUser'@'%' IDENTIFIED BY 'tj17txxk3FUC';
 
-GRANT ALL privileges ON *.* TO 'sa'@'%' with grant option;
+GRANT ALL privileges ON *.* TO 'CESUser'@'%' with grant option;
 
 -- reset master;
 
