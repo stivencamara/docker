@@ -1,0 +1,32 @@
+version: "3.9"
+name: frontend
+x-common-extra-hosts: &common-extra-hosts
+  extra_hosts:
+    - "fe01-ces.azores.gov.pt:192.168.1.80"
+    - "api01-ces.azores.gov.pt:192.168.1.90"
+    
+services:
+  frontend:
+    container_name: "fe01-ces.azores.gov.pt"
+    build:
+      context: .
+      dockerfile: dockerfile
+    image: frontend-1
+    ports:
+      - 5001:5001
+      - 443:443
+    <<: *common-extra-hosts
+    volumes:
+      - frontend01_data:/usr/share/nginx/html
+    restart: always
+    networks:
+        ces:
+            ipv4_address: 192.168.1.80
+
+volumes:
+  frontend01_data:
+
+networks:
+  ces:
+    external: true
+    driver: overlay
