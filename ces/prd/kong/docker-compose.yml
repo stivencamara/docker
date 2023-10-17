@@ -27,7 +27,7 @@ services:
     image: kong
     environment:
       - KONG_DATABASE=postgres
-      - KONG_PG_HOST=qualidade-kongdatabase-ces.azores.gov.pt
+      - KONG_PG_HOST=kongdatabase-ces.azores.gov.pt
       - KONG_PG_PASSWORD=kong
       - KONG_CASSANDRA_CONTACT_POINTS=kong-database
     command: kong migrations bootstrap
@@ -46,7 +46,7 @@ services:
       - LC_CTYPE=en_US.UTF-8
       - LC_ALL=en_US.UTF-8
       - KONG_DATABASE=postgres
-      - KONG_PG_HOST=qualidade-kongdatabase-ces.azores.gov.pt
+      - KONG_PG_HOST=kongdatabase-ces.azores.gov.pt
       - KONG_PG_USER=kong
       - KONG_PG_PASSWORD=kong
       - KONG_CASSANDRA_CONTACT_POINTS=kong-database

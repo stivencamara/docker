@@ -1,0 +1,1 @@
+docker compose --env-file backEnd/BackEndEnvironment.env -f docker-compose.yaml up -d
