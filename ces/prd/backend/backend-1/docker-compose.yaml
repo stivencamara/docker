@@ -1,5 +1,5 @@
 version: "3.9"
-name: backend
+name: backend-1
 x-common-extra-hosts: &common-extra-hosts
   extra_hosts:
     - "db01-ces.azores.gov.pt:192.168.1.10"
@@ -12,6 +12,7 @@ x-common-extra-hosts: &common-extra-hosts
     
 services:
   backend:
+    container_name: "api01-ces.azores.gov.pt"
     build:
       context: .
       dockerfile: dockerfile
