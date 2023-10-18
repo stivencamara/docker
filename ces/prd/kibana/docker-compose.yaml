@@ -29,6 +29,5 @@ volumes:
  
 networks:
   ces:
-    name: ces
     external: true
     driver: overlay
