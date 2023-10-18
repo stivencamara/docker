@@ -68,7 +68,7 @@ network.host: es02-ces.azores.gov.pt
 # The default list of hosts is ["127.0.0.1", "[::1]"]
 #
 #discovery.seed_hosts: ["10.50.192.195", "10.50.192.196"]
-discovery.seed_hosts: ["172.29.135.199","172.22.135.199"]
+discovery.seed_hosts: ["es01-ces.azores.gov.pt","es02-ces.azores.gov.pt"]
 #
 # Bootstrap the cluster using an initial set of master-eligible nodes:
 #

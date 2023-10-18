@@ -2,8 +2,8 @@ version: "3.9"
 name: elasticsearch-es02
 x-common-extra-hosts: &common-extra-hosts
   extra_hosts:
-    - "es01-ces.azores.gov.pt:192.168.1.30"
-    - "es02-ces.azores.gov.pt:192.168.1.31"
+    - "es01-ces.azores.gov.pt:172.29.135.199"
+    - "es02-ces.azores.gov.pt:172.22.135.199"
     
 services:
   es02:
@@ -17,6 +17,8 @@ services:
     networks:
       ces:
         ipv4_address: 192.168.1.31
+    environment:
+      network.publish_host: es02-ces.azores.gov.pt
     ports:
       - 9200:9200
       - 9300:9300
@@ -33,6 +35,5 @@ volumes:
 
 networks:
   ces:
-    name: ces
     external: true
     driver: overlay
