@@ -445,11 +445,11 @@ DROP PROCEDURE IF EXISTS ReportOrganizationCount;
 CREATE PROCEDURE ReportOrganizationCount
 (
 	IN pOrganization_Id int,
-	IN pOrganization_Version int,
-	OUT pReturn INT
+	IN pOrganization_Version int
 )
 BEGIN
 
+	DECLARE pReturn INT;
 	DECLARE vPublished_State INT DEFAULT 5;
 
 	-- Caso não passem o Id/Version 
@@ -479,6 +479,7 @@ BEGIN
 				)
 	
 	SELECT COUNT(*) INTO pReturn FROM RecursiveCTE;
+	SELECT pReturn;
 END;
 
 DROP PROCEDURE IF EXISTS GetTreeView;
