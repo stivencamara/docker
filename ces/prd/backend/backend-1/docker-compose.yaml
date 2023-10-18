@@ -28,12 +28,9 @@ services:
         ces:
             ipv4_address: 192.168.1.90
 
-
-
 volumes:
  backend01_data:
-
-   
+  
 networks:
   ces:
     external: true
