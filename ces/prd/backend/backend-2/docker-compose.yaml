@@ -1,5 +1,5 @@
 version: "3.9"
-name: backend-1
+name: backend-2
 x-common-extra-hosts: &common-extra-hosts
   extra_hosts:
     - "db01-ces.azores.gov.pt:192.168.1.10"
@@ -9,27 +9,28 @@ x-common-extra-hosts: &common-extra-hosts
     - "kafka1-ces.azores.gov.pt:192.168.1.50"
     - "fe01-ces.azores.gov.pt:192.168.1.80"
     - "api01-ces.azores.gov.pt:192.168.1.90"
+    - "api02-ces.azores.gov.pt:192.168.1.91"
     
 services:
   backend:
-    container_name: "api01-ces.azores.gov.pt"
+    container_name: "api02-ces.azores.gov.pt"
     build:
       context: .
       dockerfile: dockerfile
-    image: backend-1
+    image: backend-2
     ports:
       - 443:443
     <<: *common-extra-hosts  
     mem_limit: 14g
     volumes:
-      - backend01_data:/api
+      - backend02_data:/api
     restart: always
     networks:
         ces:
-            ipv4_address: 192.168.1.90
+            ipv4_address: 192.168.1.91
 
 volumes:
- backend01_data:
+ backend02_data:
   
 networks:
   ces:

@@ -9,6 +9,7 @@ x-common-extra-hosts: &common-extra-hosts
     - "kafka1-ces.azores.gov.pt:192.168.1.50"
     - "fe01-ces.azores.gov.pt:192.168.1.80"
     - "api01-ces.azores.gov.pt:192.168.1.90"
+    - "api02-ces.azores.gov.pt:192.168.1.91"
     
 services:
   backend:
