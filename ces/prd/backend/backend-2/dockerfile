@@ -1,0 +1,43 @@
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
+WORKDIR /api
+COPY ../content .
+
+#copy CA
+COPY ./certs/api01-ces.azores.gov.pt/CA/ca-certificate.pem /usr/local/share/ca-certificates/api01-ces.azores.gov.pt.ca-certificate.crt
+COPY ./certs/api01-ces.azores.gov.pt/CA/ca-private-key.pem /usr/local/share/ca-certificates/api01-ces.azores.gov.pt.ca-private-key.pem
+
+#copy Certificate Configuration Files
+COPY ./certs/api01-ces.azores.gov.pt/certs/certificate.conf /usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/certificate.conf
+COPY ./certs/api01-ces.azores.gov.pt/certs/certificate-ext.conf /usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/certificate-ext.conf
+
+#generating certificate signed with copied CA
+RUN openssl genrsa -out /usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/api01.key 2048 \
+&& openssl req -new -key /usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/api01.key -out /usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/api01.csr -config /usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/certificate.conf \
+&& openssl x509 -req -in /usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/api01.csr -CA /usr/local/share/ca-certificates/api01-ces.azores.gov.pt.ca-certificate.crt -CAkey /usr/local/share/ca-certificates/api01-ces.azores.gov.pt.ca-private-key.pem -passin pass:123QWEasdZXC -CAcreateserial -out /usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/api01.crt -extfile /usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/certificate-ext.conf -days 365 \
+&& openssl pkcs12 -export -out /usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/api01.pfx -passout pass:"123QWEasdZXC" -inkey /usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/api01.key -passin pass:"123QWEasdZXC" -in /usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/api01.crt
+
+ENV ASPNETCORE_URLS=https://*:443;http://*:80
+ENV ASPNETCORE_HTTP_PORT=80
+ENV ASPNETCORE_HTTPS_PORT=443
+
+ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/api01.pfx
+#ENV ASPNETCORE_Kestrel__Certificates__Default__KeyPath=/usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/api01.key
+ENV ASPNETCORE_Kestrel__Certificates__Default__Password=123QWEasdZXC
+
+#ENV ASPNETCORE_ENVIRONMENT=Production
+
+
+# Switch to root user temporarily to modify system files
+USER root
+
+#RUN apt-get update && \
+#    apt-get install -y nano && \
+#	apt-get install -y iputils-ping && \
+#	apt-get install -y telnet && \
+RUN    update-ca-certificates 
+
+
+#EXPOSE 80
+#EXPOSE 443
+
+ENTRYPOINT ["dotnet", "CES.API.dll","--cert", "/usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/api01.pfx", "--password", "123QWEasdZXC"]
