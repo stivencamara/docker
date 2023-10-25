@@ -53,7 +53,7 @@ path.logs: /usr/share/elasticsearch/logs
 # By default Elasticsearch is only accessible on localhost. Set a different
 # address here to expose this node on the network:
 #
-network.host: es02-ces.azores.gov.pt
+network.host: 0.0.0.0
 #
 # By default Elasticsearch listens for HTTP traffic on the first free port it
 # finds starting at 9200. Set a specific HTTP port here:
@@ -68,7 +68,7 @@ network.host: es02-ces.azores.gov.pt
 # The default list of hosts is ["127.0.0.1", "[::1]"]
 #
 #discovery.seed_hosts: ["10.50.192.195", "10.50.192.196"]
-discovery.seed_hosts: ["es01-ces.azores.gov.pt","es02-ces.azores.gov.pt"]
+discovery.seed_hosts: ["192.168.1.30","192.168.1.31"]
 #
 # Bootstrap the cluster using an initial set of master-eligible nodes:
 #

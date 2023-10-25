@@ -40,4 +40,4 @@ RUN    update-ca-certificates
 #EXPOSE 80
 #EXPOSE 443
 
-ENTRYPOINT ["dotnet", "CES.API.dll","--cert", "/usr/local/share/ca-certificates/certificate-private-key.pfx", "--password", "123QWEasdZXC"]
+ENTRYPOINT ["dotnet", "CES.API.dll","--cert", "/usr/local/share/ca-certificates/config/certs/api01-ces.azores.gov.pt/certs/api01.pfx", "--password", "123QWEasdZXC"]

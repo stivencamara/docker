@@ -2,8 +2,8 @@ version: "3.9"
 name: elasticsearch-es01
 x-common-extra-hosts: &common-extra-hosts
   extra_hosts:
-    - "es01-ces.azores.gov.pt:172.29.135.199"
-    - "es02-ces.azores.gov.pt:172.22.135.199"
+    - "es01-ces.azores.gov.pt:192.168.1.30"
+    - "es02-ces.azores.gov.pt:192.168.1.31"
     
 services:
   es01:

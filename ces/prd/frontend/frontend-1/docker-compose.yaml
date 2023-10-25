@@ -3,7 +3,9 @@ name: frontend
 x-common-extra-hosts: &common-extra-hosts
   extra_hosts:
     - "fe01-ces.azores.gov.pt:192.168.1.80"
+    - "fe02-ces.azores.gov.pt:192.168.1.81"
     - "api01-ces.azores.gov.pt:192.168.1.90"
+    - "api02-ces.azores.gov.pt:192.168.1.91"
     
 services:
   frontend:
