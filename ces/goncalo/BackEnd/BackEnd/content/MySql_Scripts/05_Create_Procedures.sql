@@ -1,7 +1,7 @@
 USE `CES.API.Database`;
 
 DROP PROCEDURE IF EXISTS Clear_Jobs;
-
+DELIMITER @@
 CREATE PROCEDURE Clear_Jobs
 (
 	IN pMachine_Name nvarchar(64)
@@ -13,11 +13,12 @@ BEGIN
                 SET Machine_Name = NULL, Created = now()
                 WHERE Machine_Name = pMachine_Name;
 	END IF;
-END;
+END @@
+DELIMITER ;
 
 
 DROP PROCEDURE IF EXISTS Unlock_Timer_Job;
-
+DELIMITER @@
 CREATE PROCEDURE Unlock_Timer_Job
 (
 	IN pTimer_Job_Id nvarchar(64),
@@ -38,11 +39,12 @@ BEGIN
 	END IF;
 
 	SELECT pReturn;
-END;
+END @@
+DELIMITER ;
 
 
 DROP PROCEDURE IF EXISTS Register_Timer_Job;
-
+DELIMITER @@
 CREATE PROCEDURE Register_Timer_Job
 (
 	IN pTimer_Job_Id nvarchar(64)
@@ -52,11 +54,13 @@ BEGIN
 					WHERE PK_Timer_Job_Id = pTimer_Job_Id) THEN
             INSERT INTO Control_Timer_Jobs (PK_Timer_Job_Id) VALUES(pTimer_Job_Id);
 	END IF;
-END;
+END @@
+DELIMITER ;
 
 
 DROP PROCEDURE IF EXISTS Lock_Timer_Job;
 
+DELIMITER @@
 CREATE PROCEDURE Lock_Timer_Job
 (
 	IN pTimer_Job_Id nvarchar(64),
@@ -77,10 +81,12 @@ BEGIN
 	END IF;
 
 	SELECT pReturn;
-END;
+END @@
+DELIMITER ;
 
 DROP PROCEDURE IF EXISTS DateTreeView;
 
+DELIMITER @@
 CREATE  PROCEDURE DateTreeView
 (
 	IN pOrganization_Id INT,
@@ -172,7 +178,8 @@ BEGIN
 					texts.Name, cte.Can_Have_Points_Of_Care, cte.Can_Have_Services, cte.Group_Name, cte.FK_Record_State_Type_Id, cte.Organization_Active,
 					t0.PK_Service_Id as Service_Id, t0.PK_Service_Version as Service_Version, t0.Name0 as Service_Name, t0.FK_Record_State_Type_Id as Service_Record_State_Type_Id, t0.Service_Active, -- service
 					t1.PK_Point_Of_Care_Id as Poc_Id, t1.PK_Point_Of_Care_Version as Poc_Version, t1.Name0 as Poc_Name, t1.FK_Record_State_Type_Id as Poc_Record_State_Type_Id, t1.Point_Of_Care_Active as Poc_Active, -- Poc
-					t1.PK_Service_Id as Poc_Service_Id, t1.PK_Service_Version as Poc_Service_Version, t1.Name00 as Poc_Service_Name, t1.FK_Record_State_Type_Id00 as Poc_Service_Record_State_Type_Id, t1.Service_Active as Poc_Service_Active, CASE WHEN (t0.Fk_Organization_Parent_Id0 = t1.Fk_Organization_Parent_Id1) THEN 1 ELSE 0 END as Poc_Service_External -- Poc / service
+					t1.PK_Service_Id as Poc_Service_Id, t1.PK_Service_Version as Poc_Service_Version, t1.Name00 as Poc_Service_Name, t1.FK_Record_State_Type_Id00 as Poc_Service_Record_State_Type_Id, 
+					t1.Service_Active as Poc_Service_Active, CASE WHEN (t0.Fk_Organization_Parent_Id0 = t1.Fk_Organization_Parent_Id1) THEN 1 ELSE 0 END as Poc_Service_External -- Poc / service
 			
 			FROM RecursiveCTE AS cte
 			
@@ -193,14 +200,40 @@ BEGIN
 
 			-- Points Of Care
 			LEFT JOIN (
-				SELECT p.FK_Point_Of_Care_Id, p.FK_Point_Of_Care_Version, p.FK_Organization_Parent_Id, p.FK_Organization_Parent_Version, p.Approved_Date, p.Created_Date, p.FK_Parent_Record_State_Type_Id, p.FK_Record_State_Type_Id, p.Observations, p.Obsoleted_Date, p0.PK_Point_Of_Care_Id, p0.PK_Point_Of_Care_Version, p0.Active, p0.Approved, p0.Approved_Version, p0.Code, p0.Created, p0.Created_By, p0.Deleted, p0.End_Date, p0.FK_Address_Id, p0.FK_Approved_By, p0.FK_Channel_Id, p0.Fk_Organization_Parent_Id AS Fk_Organization_Parent_Id0, p0.Fk_Organization_Parent_Version AS Fk_Organization_Parent_Version0, p0.FK_Record_State_Type_Id AS FK_Record_State_Type_Id0, p0.Generic_1, p0.Generic_2, p0.Generic_3, p0.In_History, p0.Name, p0.Point_Of_Care_Active, p0.Start_Date, p0.Updated, p0.Updated_By, p1.PK_Point_Of_Care_Text_Id, p1.Abreviation, p1.Attendance_Restrictions, p1.Description, p1.FK_Point_Of_Care_Id AS FK_Point_Of_Care_Id0, p1.FK_Point_Of_Care_Version AS FK_Point_Of_Care_Version0, p1.Keywords, p1.Language, p1.Name AS Name0, p1.Opening_Hours, p1.Pre_Conditions, p1.Version_Comments, t2.FK_Service_Id, t2.FK_Service_Version, t2.FK_Point_Of_Care_Id AS FK_Point_Of_Care_Id1, t2.FK_Point_Of_Care_Version AS FK_Point_Of_Care_Version1, t2.Approved_Date AS Approved_Date0, t2.Cost_Id, t2.Created_Date AS Created_Date0, t2.External_Approved_Date, t2.FK_External_Record_State_Type_Id, t2.FK_Record_State_Type_Id AS FK_Record_State_Type_Id1, t2.Observations AS Observations0, t2.Obsoleted_Date AS Obsoleted_Date0, t2.PK_Service_Id, t2.PK_Service_Version, t2.Active AS Active0, t2.Approved AS Approved0, t2.Approved_Version AS Approved_Version0, t2.Code AS Code0, t2.Cost, t2.Created AS Created0, t2.Created_By AS Created_By0, t2.Deleted AS Deleted0, t2.End_Date AS End_Date0, t2.FK_Approved_By AS FK_Approved_By0, t2.FK_Business_Event_Id, t2.FK_Diagram_Attachment_Id, t2.FK_Economic_Activity_Id, t2.FK_Life_Event_Id, t2.Fk_Organization_Parent_Id AS Fk_Organization_Parent_Id1, t2.Fk_Organization_Parent_Version AS Fk_Organization_Parent_Version1, t2.FK_Record_State_Type_Id0 AS FK_Record_State_Type_Id00, t2.FK_Service_Category_Id, t2.FK_Service_Grouping_Id, t2.FK_Service_Type_Id, t2.Generic_1 AS Generic_10, t2.Generic_2 AS Generic_20, t2.Generic_3 AS Generic_30, t2.In_History AS In_History0, t2.Name AS Name1, t2.Processing_Time_Days, t2.Processing_Time_Hours, t2.Processing_Time_Minutes, t2.Processing_Time_Months, t2.Processing_Time_Seconds, t2.Processing_Time_Weeks, t2.Processing_Time_Years, t2.Service_Active, t2.Service_Internal, t2.Start_Date AS Start_Date0, t2.Updated AS Updated0, t2.Updated_By AS Updated_By0, t2.PK_Service_Text_Id, t2.Abreviation AS Abreviation0, t2.Description AS Description0, t2.FK_Service_Id0, t2.FK_Service_Version0, t2.Keywords AS Keywords0, t2.Language AS Language0, t2.Name0 AS Name00, t2.Service_Procedure, t2.Version_Comments AS Version_Comments0
+				SELECT p.FK_Point_Of_Care_Id, p.FK_Point_Of_Care_Version, p.FK_Organization_Parent_Id, p.FK_Organization_Parent_Version, p.Approved_Date, p.Created_Date, 
+						p.FK_Parent_Record_State_Type_Id, p.FK_Record_State_Type_Id, p.Observations, p.Obsoleted_Date, p0.PK_Point_Of_Care_Id, p0.PK_Point_Of_Care_Version, 
+						p0.Active, p0.Approved, p0.Approved_Version, p0.Code, p0.Created, p0.Created_By, p0.Deleted, p0.End_Date, p0.FK_Address_Id, p0.FK_Approved_By, 
+						p0.FK_Channel_Id, p0.Fk_Organization_Parent_Id AS Fk_Organization_Parent_Id0, p0.Fk_Organization_Parent_Version AS Fk_Organization_Parent_Version0, 
+						p0.FK_Record_State_Type_Id AS FK_Record_State_Type_Id0, p0.Generic_1, p0.Generic_2, p0.Generic_3, p0.In_History, p0.Name, p0.Point_Of_Care_Active, 
+						p0.Start_Date, p0.Updated, p0.Updated_By, p1.PK_Point_Of_Care_Text_Id, p1.Abreviation, p1.Attendance_Restrictions, p1.Description, 
+						p1.FK_Point_Of_Care_Id AS FK_Point_Of_Care_Id0, p1.FK_Point_Of_Care_Version AS FK_Point_Of_Care_Version0, p1.Keywords, p1.Language, p1.Name AS Name0, 
+						p1.Opening_Hours, p1.Pre_Conditions, p1.Version_Comments, t2.FK_Service_Id, t2.FK_Service_Version, t2.FK_Point_Of_Care_Id AS FK_Point_Of_Care_Id1, 
+						t2.FK_Point_Of_Care_Version AS FK_Point_Of_Care_Version1, t2.Approved_Date AS Approved_Date0, t2.Cost_Id, t2.Created_Date AS Created_Date0, 
+						t2.External_Approved_Date, t2.FK_External_Record_State_Type_Id, t2.FK_Record_State_Type_Id AS FK_Record_State_Type_Id1, t2.Observations AS Observations0, 
+						t2.Obsoleted_Date AS Obsoleted_Date0, t2.PK_Service_Id, t2.PK_Service_Version, t2.Active AS Active0, t2.Approved AS Approved0, t2.Approved_Version AS Approved_Version0, 
+						t2.Code AS Code0, t2.Cost, t2.Created AS Created0, t2.Created_By AS Created_By0, t2.Deleted AS Deleted0, t2.End_Date AS End_Date0, t2.FK_Approved_By AS FK_Approved_By0, 
+						t2.FK_Business_Event_Id, t2.FK_Diagram_Attachment_Id, t2.FK_Economic_Activity_Id, t2.FK_Life_Event_Id, t2.Fk_Organization_Parent_Id AS Fk_Organization_Parent_Id1, 
+						t2.Fk_Organization_Parent_Version AS Fk_Organization_Parent_Version1, t2.FK_Record_State_Type_Id0 AS FK_Record_State_Type_Id00, t2.FK_Service_Category_Id, 
+						t2.FK_Service_Grouping_Id, t2.FK_Service_Type_Id, t2.Generic_1 AS Generic_10, t2.Generic_2 AS Generic_20, t2.Generic_3 AS Generic_30, t2.In_History AS In_History0, 
+						t2.Name AS Name1, t2.Processing_Time_Days, t2.Processing_Time_Hours, t2.Processing_Time_Minutes, t2.Processing_Time_Months, t2.Processing_Time_Seconds, 
+						t2.Processing_Time_Weeks, t2.Processing_Time_Years, t2.Service_Active, t2.Service_Internal, t2.Start_Date AS Start_Date0, t2.Updated AS Updated0, t2.Updated_By AS Updated_By0, 
+						t2.PK_Service_Text_Id, t2.Abreviation AS Abreviation0, t2.Description AS Description0, t2.FK_Service_Id0, t2.FK_Service_Version0, t2.Keywords AS Keywords0, 
+						t2.Language AS Language0, t2.Name0 AS Name00, t2.Service_Procedure, t2.Version_Comments AS Version_Comments0
 				FROM Points_Of_Care_Organizations AS p
 				INNER JOIN Points_Of_Care AS p0 ON p.FK_Point_Of_Care_Id = p0.PK_Point_Of_Care_Id AND p.FK_Point_Of_Care_Version = p0.PK_Point_Of_Care_Version
 				-- Points Of Care Texts
 				LEFT JOIN Point_Of_Care_Texts AS p1 ON p0.PK_Point_Of_Care_Id = p1.FK_Point_Of_Care_Id AND p0.PK_Point_Of_Care_Version = p1.FK_Point_Of_Care_Version
 				-- Services 
 				LEFT JOIN (
-					SELECT s2.FK_Service_Id, s2.FK_Service_Version, s2.FK_Point_Of_Care_Id, s2.FK_Point_Of_Care_Version, s2.Approved_Date, s2.Cost_Id, s2.Created_Date, s2.External_Approved_Date, s2.FK_External_Record_State_Type_Id, s2.FK_Record_State_Type_Id, s2.Observations, s2.Obsoleted_Date, s3.PK_Service_Id, s3.PK_Service_Version, s3.Active, s3.Approved, s3.Approved_Version, s3.Code, s3.Cost, s3.Created, s3.Created_By, s3.Deleted, s3.End_Date, s3.FK_Approved_By, s3.FK_Business_Event_Id, s3.FK_Diagram_Attachment_Id, s3.FK_Economic_Activity_Id, s3.FK_Life_Event_Id, s3.Fk_Organization_Parent_Id, s3.Fk_Organization_Parent_Version, s3.FK_Record_State_Type_Id AS FK_Record_State_Type_Id0, s3.FK_Service_Category_Id, s3.FK_Service_Grouping_Id, s3.FK_Service_Type_Id, s3.Generic_1, s3.Generic_2, s3.Generic_3, s3.In_History, s3.Name, s3.Processing_Time_Days, s3.Processing_Time_Hours, s3.Processing_Time_Minutes, s3.Processing_Time_Months, s3.Processing_Time_Seconds, s3.Processing_Time_Weeks, s3.Processing_Time_Years, s3.Service_Active, s3.Service_Internal, s3.Start_Date, s3.Updated, s3.Updated_By, s4.PK_Service_Text_Id, s4.Abreviation, s4.Description, s4.FK_Service_Id AS FK_Service_Id0, s4.FK_Service_Version AS FK_Service_Version0, s4.Keywords, s4.Language, s4.Name AS Name0, s4.Service_Procedure, s4.Version_Comments
+					SELECT s2.FK_Service_Id, s2.FK_Service_Version, s2.FK_Point_Of_Care_Id, s2.FK_Point_Of_Care_Version, s2.Approved_Date, s2.Cost_Id, s2.Created_Date, 
+							s2.External_Approved_Date, s2.FK_External_Record_State_Type_Id, s2.FK_Record_State_Type_Id AS FK_Record_State_Type_Id0, s2.Observations, s2.Obsoleted_Date, s3.PK_Service_Id, s3.PK_Service_Version, 
+							s3.Active, s3.Approved, s3.Approved_Version, s3.Code, s3.Cost, s3.Created, s3.Created_By, s3.Deleted, s3.End_Date, s3.FK_Approved_By, s3.FK_Business_Event_Id, 
+							s3.FK_Diagram_Attachment_Id, s3.FK_Economic_Activity_Id, s3.FK_Life_Event_Id, s3.Fk_Organization_Parent_Id, s3.Fk_Organization_Parent_Version, 
+							s3.FK_Record_State_Type_Id, s3.FK_Service_Category_Id, s3.FK_Service_Grouping_Id, s3.FK_Service_Type_Id, 
+							s3.Generic_1, s3.Generic_2, s3.Generic_3, s3.In_History, s3.Name, s3.Processing_Time_Days, s3.Processing_Time_Hours, s3.Processing_Time_Minutes, 
+							s3.Processing_Time_Months, s3.Processing_Time_Seconds, s3.Processing_Time_Weeks, s3.Processing_Time_Years, s3.Service_Active, s3.Service_Internal, 
+							s3.Start_Date, s3.Updated, s3.Updated_By, s4.PK_Service_Text_Id, s4.Abreviation, s4.Description, s4.FK_Service_Id AS FK_Service_Id0, 
+							s4.FK_Service_Version AS FK_Service_Version0, s4.Keywords, s4.Language, s4.Name AS Name0, s4.Service_Procedure, s4.Version_Comments
 					FROM Services_Points_Of_Care AS s2
 					INNER JOIN Services AS s3 ON s2.FK_Service_Id = s3.PK_Service_Id AND s2.FK_Service_Version = s3.PK_Service_Version
 					LEFT JOIN Service_Texts AS s4 ON s3.PK_Service_Id = s4.FK_Service_Id AND s3.PK_Service_Version = s4.FK_Service_Version
@@ -221,11 +254,13 @@ BEGIN
     DROP TEMPORARY TABLE IF EXISTS vMainTempTable;
     DROP TEMPORARY TABLE IF EXISTS vMainTempTable_1;
     
-END;
+END @@
+DELIMITER ;
 
 
 DROP PROCEDURE IF EXISTS TodayTreeView;
 
+DELIMITER @@
 CREATE  PROCEDURE TodayTreeView
 (
 	IN pOrganization_Id int,
@@ -365,10 +400,10 @@ BEGIN
 				-- Services 
 				LEFT JOIN (
 					SELECT s2.FK_Service_Id, s2.FK_Service_Version, s2.FK_Point_Of_Care_Id, s2.FK_Point_Of_Care_Version, s2.Approved_Date, s2.Cost_Id, s2.Created_Date, s2.External_Approved_Date, 
-							s2.FK_External_Record_State_Type_Id, s3.FK_Record_State_Type_Id, s2.Observations, s2.Obsoleted_Date, 
+							s2.FK_External_Record_State_Type_Id, s2.FK_Record_State_Type_Id  AS FK_Record_State_Type_Id0, s2.Observations, s2.Obsoleted_Date, 
 							s3.PK_Service_Id, s3.PK_Service_Version, s3.Active, s3.Approved, s3.Approved_Version, s3.Code, s3.Cost, s3.Created, s3.Created_By, s3.Deleted, s3.End_Date, 
 							s3.FK_Approved_By, s3.FK_Business_Event_Id, s3.FK_Diagram_Attachment_Id, s3.FK_Economic_Activity_Id, s3.FK_Life_Event_Id, s3.Fk_Organization_Parent_Id, 
-							s3.Fk_Organization_Parent_Version, s3.FK_Record_State_Type_Id AS FK_Record_State_Type_Id0, s3.FK_Service_Category_Id, s3.FK_Service_Grouping_Id, 
+							s3.Fk_Organization_Parent_Version, s3.FK_Record_State_Type_Id, s3.FK_Service_Category_Id, s3.FK_Service_Grouping_Id, 
 							s3.FK_Service_Type_Id, s3.Generic_1, s3.Generic_2, s3.Generic_3, s3.In_History, s3.Name, s3.Processing_Time_Days, s3.Processing_Time_Hours, s3.Processing_Time_Minutes, 
 							s3.Processing_Time_Months, s3.Processing_Time_Seconds, s3.Processing_Time_Weeks, s3.Processing_Time_Years, s3.Service_Active, s3.Service_Internal, s3.Start_Date, 
 							s3.Updated, s3.Updated_By, s4.PK_Service_Text_Id, s4.Abreviation, s4.Description, s4.FK_Service_Id AS FK_Service_Id0, s4.FK_Service_Version AS FK_Service_Version0, 
@@ -437,11 +472,13 @@ BEGIN
     
     DROP TEMPORARY TABLE IF EXISTS vMainTempTable;
             
-END;
+END @@
+DELIMITER ;
 
 
 DROP PROCEDURE IF EXISTS ReportOrganizationCount;
 
+DELIMITER @@
 CREATE PROCEDURE ReportOrganizationCount
 (
 	IN pOrganization_Id int,
@@ -480,10 +517,12 @@ BEGIN
 	
 	SELECT COUNT(*) INTO pReturn FROM RecursiveCTE;
 	SELECT pReturn;
-END;
+END @@
+DELIMITER ;
 
 DROP PROCEDURE IF EXISTS GetTreeView;
 
+DELIMITER @@
 CREATE PROCEDURE GetTreeView
 (
 	IN pOrganization_Id int,
@@ -527,4 +566,40 @@ BEGIN
 	SELECT * FROM RecursiveCTE
     ORDER BY PK_Organization_Id;
  
-END;
+END @@
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS GetReverseTreeView;
+
+DELIMITER @@
+CREATE PROCEDURE GetReverseTreeView
+(
+	IN pOrganization_Id int,
+	IN pOrganization_Version int
+)
+BEGIN
+
+	DECLARE vPublished_State INT DEFAULT 5;
+	DECLARE vExtincted_State INT DEFAULT 9;
+
+	WITH RECURSIVE RecursiveCTE (PK_Organization_Id, PK_Organization_Version, Fk_Organization_Parent_Id, Fk_Organization_Parent_Version, FK_Record_State_Type_Id)
+				AS
+				(
+					SELECT e.PK_Organization_Id, e.PK_Organization_Version, e.Fk_Organization_Parent_Id, e.Fk_Organization_Parent_Version, e.FK_Record_State_Type_Id
+					FROM organizations AS e
+					WHERE e.PK_Organization_Id = pOrganization_Id AND e.PK_Organization_Version = pOrganization_Version AND 
+							(e.FK_Record_State_Type_Id <= vPublished_State OR e.FK_Record_State_Type_Id = vExtincted_State)
+
+					UNION ALL
+
+					SELECT e.PK_Organization_Id, e.PK_Organization_Version, e.Fk_Organization_Parent_Id, e.Fk_Organization_Parent_Version, e.FK_Record_State_Type_Id
+					FROM organizations AS e
+                
+					INNER JOIN RecursiveCTE AS cte ON e.PK_Organization_Id = cte.Fk_Organization_Parent_Id AND e.PK_Organization_Version = cte.FK_Organization_Parent_Version
+					WHERE (e.FK_Record_State_Type_Id <= vPublished_State OR e.FK_Record_State_Type_Id = vExtincted_State)
+				)
+	SELECT * FROM RecursiveCTE
+    ORDER BY PK_Organization_Id;
+ 
+END @@
+DELIMITER ;
