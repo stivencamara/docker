@@ -1,5 +1,5 @@
 DROP PROCEDURE IF EXISTS DateTreeView;
-DELIMITER @@;
+DELIMITER @@
 CREATE  PROCEDURE DateTreeView
 (
 	IN pOrganization_Id INT,
@@ -167,11 +167,12 @@ BEGIN
     DROP TEMPORARY TABLE IF EXISTS vMainTempTable;
     DROP TEMPORARY TABLE IF EXISTS vMainTempTable_1;
     
-END@@;
+END @@
+DELIMITER ;
 
 
 DROP PROCEDURE IF EXISTS TodayTreeView;
-DELIMITER @@;
+DELIMITER @@
 CREATE  PROCEDURE TodayTreeView
 (
 	IN pOrganization_Id int,
@@ -383,4 +384,5 @@ BEGIN
     
     DROP TEMPORARY TABLE IF EXISTS vMainTempTable;
             
-END@@;
+END @@
+DELIMITER ;

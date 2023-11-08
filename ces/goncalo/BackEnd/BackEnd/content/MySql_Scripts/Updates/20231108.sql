@@ -1,0 +1,1 @@
+ALTER TABLE organizations ADD organizationsTree_Order INT NOT NULL DEFAULT 1;
