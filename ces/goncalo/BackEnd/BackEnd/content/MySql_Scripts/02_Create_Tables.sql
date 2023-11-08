@@ -476,6 +476,7 @@ CREATE TABLE Organizations (
     Generic_2                      MEDIUMTEXT NULL,
     Generic_3                      MEDIUMTEXT NULL,
     Import_Id                      INT            NULL,
+    Tree_Order                     INT            NOT NULL DEFAULT 1,
     CONSTRAINT PK_Organizations PRIMARY KEY CLUSTERED (PK_Organization_Id ASC, PK_Organization_Version ASC)
 );
 
