@@ -1,0 +1,1 @@
+import{b as r}from"./index-ab26f80c.js";const s={search:e=>r.post("/profiles/search",e),create:e=>r.post("/profiles",e),update:e=>r.put("/profiles",e),getById:e=>r.get(`/profiles/${e}`),delete:e=>r.delete(`/profiles/${e}`)};export{s as p};
