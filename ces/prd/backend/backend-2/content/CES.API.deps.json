@@ -1578,6 +1578,14 @@
           "System.Runtime": "4.3.0"
         }
       },
+      "System.IO.Packaging/6.0.0": {
+        "runtime": {
+          "lib/net6.0/System.IO.Packaging.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.21.52210"
+          }
+        }
+      },
       "System.IO.Pipelines/6.0.3": {},
       "System.Linq/4.3.0": {
         "dependencies": {
@@ -1866,6 +1874,62 @@
           "System.Xml.ReaderWriter": "4.3.0"
         }
       },
+      "Xceed.Document.NET/2.1.21565.13360": {
+        "dependencies": {
+          "System.Drawing.Common": "7.0.0",
+          "System.IO.Packaging": "6.0.0",
+          "Xceed.Pdf": "2.1.21565.13360"
+        },
+        "runtime": {
+          "lib/net5.0/Xceed.Document.NET5.dll": {
+            "assemblyVersion": "2.1.21565.13360",
+            "fileVersion": "2.1.21565.13360"
+          }
+        }
+      },
+      "Xceed.Pdf/2.1.21565.13360": {
+        "dependencies": {
+          "System.Drawing.Common": "7.0.0"
+        },
+        "runtime": {
+          "lib/net5.0/Xceed.PDF.NET5.dll": {
+            "assemblyVersion": "2.1.21565.13360",
+            "fileVersion": "2.1.21565.13360"
+          }
+        }
+      },
+      "Xceed.Products.Documents.Libraries.Full/2.1.21565.13360": {
+        "dependencies": {
+          "Xceed.Document.NET": "2.1.21565.13360",
+          "Xceed.Pdf": "2.1.21565.13360",
+          "Xceed.Words.NET": "2.1.21565.13360",
+          "Xceed.Workbooks.NET": "1.0.21565.13360"
+        }
+      },
+      "Xceed.Words.NET/2.1.21565.13360": {
+        "dependencies": {
+          "Xceed.Document.NET": "2.1.21565.13360",
+          "Xceed.Pdf": "2.1.21565.13360"
+        },
+        "runtime": {
+          "lib/net5.0/Xceed.Words.NET5.dll": {
+            "assemblyVersion": "2.1.21565.13360",
+            "fileVersion": "2.1.21565.13360"
+          }
+        }
+      },
+      "Xceed.Workbooks.NET/1.0.21565.13360": {
+        "dependencies": {
+          "System.Drawing.Common": "7.0.0",
+          "System.IO.Packaging": "6.0.0"
+        },
+        "runtime": {
+          "lib/net5.0/Xceed.Workbooks.NET5.dll": {
+            "assemblyVersion": "1.0.21565.13360",
+            "fileVersion": "1.0.21565.13360"
+          }
+        }
+      },
       "Z.EntityFramework.Extensions.EFCore/7.100.0.3": {
         "dependencies": {
           "Microsoft.CSharp": "4.7.0",
@@ -1926,6 +1990,16 @@
         },
         "runtime": {
           "Babel.Auth.Gov.dll": {}
+        }
+      },
+      "Babel.Export/1.0.0": {
+        "dependencies": {
+          "System.Drawing.Common": "7.0.0",
+          "System.IO.Packaging": "6.0.0",
+          "Xceed.Products.Documents.Libraries.Full": "2.1.21565.13360"
+        },
+        "runtime": {
+          "Babel.Export.dll": {}
         }
       },
       "Babel.Redis/1.0.0": {
@@ -1998,6 +2072,7 @@
       "CES.API.Core.Services/1.0.0": {
         "dependencies": {
           "Babel.Auth.Gov": "1.0.0",
+          "Babel.Export": "1.0.0",
           "Babel.Redis": "1.0.0",
           "CES.API.Core.Data": "1.0.0",
           "CES.API.Core.Domain": "1.0.0",
@@ -3064,6 +3139,13 @@
       "path": "system.io.filesystem.primitives/4.3.0",
       "hashPath": "system.io.filesystem.primitives.4.3.0.nupkg.sha512"
     },
+    "System.IO.Packaging/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-C7OkTRIjqIjAKu6ef/fuj8ynCZTPcTYZnvHaq48bniACgXXJogmEoIc56YCDNTc14xhsbLmgpS3KP+evbsUa2g==",
+      "path": "system.io.packaging/6.0.0",
+      "hashPath": "system.io.packaging.6.0.0.nupkg.sha512"
+    },
     "System.IO.Pipelines/6.0.3": {
       "type": "package",
       "serviceable": true,
@@ -3337,6 +3419,41 @@
       "path": "system.xml.xpath/4.3.0",
       "hashPath": "system.xml.xpath.4.3.0.nupkg.sha512"
     },
+    "Xceed.Document.NET/2.1.21565.13360": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-UrNTOIgRjqoGfmz/vobwO0fyBtNBNR0W6Umh/BUl+4KD+B9ljyOhvn42zvDYAh7g/UgjmyeDvWyXEVNF81EFpw==",
+      "path": "xceed.document.net/2.1.21565.13360",
+      "hashPath": "xceed.document.net.2.1.21565.13360.nupkg.sha512"
+    },
+    "Xceed.Pdf/2.1.21565.13360": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Ao3YEWPdUhuC+WWoNokppENjjUaDVoGQBDBXFI5v4uSM5zVc+4tvi1C0zWrhTCqJfHf6fTrFW7NtHFLA4x5lZA==",
+      "path": "xceed.pdf/2.1.21565.13360",
+      "hashPath": "xceed.pdf.2.1.21565.13360.nupkg.sha512"
+    },
+    "Xceed.Products.Documents.Libraries.Full/2.1.21565.13360": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-V/YxEWlE69Iy3z8N35naXeDpeVcc1IgIxmw3aLHInGT6Jczh5sBvKaKzPrCLcRUftVmpiVNlTkPJMrx3pObvYw==",
+      "path": "xceed.products.documents.libraries.full/2.1.21565.13360",
+      "hashPath": "xceed.products.documents.libraries.full.2.1.21565.13360.nupkg.sha512"
+    },
+    "Xceed.Words.NET/2.1.21565.13360": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-MkYzwVCKPvDNmpRWS+FHjRjQl+++MP0Jc3vMH5itFmQ8kaJGMpX+9WY9+z+c/ABk9oftWFMQP/A89avlAigCZA==",
+      "path": "xceed.words.net/2.1.21565.13360",
+      "hashPath": "xceed.words.net.2.1.21565.13360.nupkg.sha512"
+    },
+    "Xceed.Workbooks.NET/1.0.21565.13360": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-iUyD8VeMflfzWa9WcvOXZetipR3gWScFRliLNaxxX0a89RjAqJ8I0wWIYKIMYqsT77GlpEQl6WYsaYJE2Pof/g==",
+      "path": "xceed.workbooks.net/1.0.21565.13360",
+      "hashPath": "xceed.workbooks.net.1.0.21565.13360.nupkg.sha512"
+    },
     "Z.EntityFramework.Extensions.EFCore/7.100.0.3": {
       "type": "package",
       "serviceable": true,
@@ -3359,6 +3476,11 @@
       "hashPath": "z.expressions.eval.5.0.10.nupkg.sha512"
     },
     "Babel.Auth.Gov/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Babel.Export/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
