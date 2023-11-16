@@ -1,1 +1,0 @@
-import{b as e}from"./index-f1c6a491.js";const g={getLanguages:()=>e.get("/settings/languages"),getIconById:t=>e.get(`/settings/objecttype/${t}`),updateIcon:t=>(t.objectTypeId=t.id,e.put("/settings/objecttype",t))};export{g as s};
